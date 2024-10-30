@@ -1,0 +1,88 @@
+.student-page {
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+  }
+  
+  .title {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 20px;
+  }
+  
+  .controls {
+    margin-bottom: 20px;
+    position: relative; /* Allow absolute positioning of audio controls */
+  }
+  
+  .audio-controls {
+    position: absolute;
+    left: 10%; /* Position the controls below the image */
+    top: 10%; /* Adjust top position as needed */
+    z-index: 10;
+  }
+  
+  .page-navigation {
+    margin-top: 20px;
+  }
+  
+  .button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff; /* Bootstrap Primary Color */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+    transform: scale(1.05);
+  }
+  
+  .pen-slider {
+    position: fixed; /* Keep the pen size slider fixed on the left side */
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%); /* Center the slider vertically */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+  }
+  
+  .pen-size-slider {
+    height: 200px; /* Slider height */
+    transform: rotate(-90deg); /* Rotate slider to vertical */
+    margin-top: 20px;
+  }
+  
+  input[type="range"] {
+    appearance: none;
+    background: #ddd; /* Default background for range */
+    border-radius: 10px;
+    height: 8px;
+  }
+  
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 20px; /* Thumb width */
+    height: 20px; /* Thumb height */
+    background: #007bff; /* Thumb color */
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
