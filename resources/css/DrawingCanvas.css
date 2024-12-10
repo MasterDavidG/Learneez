@@ -1,0 +1,13 @@
+.drawing-canvas {
+    border: 2px solid #ddd;
+    width: 800px;
+    height: 600px;
+    position: relative;
+  }
+  
+  .drawing-canvas button {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+  }
+  

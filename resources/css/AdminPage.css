@@ -1,0 +1,339 @@
+.admin-page-container {
+    font-family: 'Arial', sans-serif;
+    background-color: #f3f9ff;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Header Styling */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #006bb6;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    background-color: #0073e6;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.button:hover {
+    background-color: #005bb5;
+    transform: translateY(-2px);
+}
+
+.button:active {
+    background-color: #003f80;
+}
+
+/* Section Styling */
+.upload-section,
+.page-selector-section,
+.page-editor-section {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.upload-section h2,
+.page-selector-section h2,
+.page-editor-section h2 {
+    font-size: 18px;
+    color: #004b8d;
+    margin-bottom: 15px;
+}
+
+/* Dropdowns in a Single Row */
+.page-selector-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.page-selector-section select {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.file-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* Konva Stage */
+.stage {
+    width: 800px;
+    height: 600px;
+    border: 2px dashed #bbb;
+    border-radius: 8px;
+    background-color: #f7faff;
+    margin: 0 auto;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.controls .button {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .admin-page-container {
+        padding: 15px;
+    }
+
+    .page-selector-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-selector-section select {
+        flex: none;
+        width: 100%;
+    }
+
+    .stage {
+        width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .header-buttons {
+        justify-content: center;
+    }
+
+    .page-selector-section {
+        flex-direction: column;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .controls .button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .button {
+        font-size: 12px;
+        padding: 8px 10px;
+    }
+
+    .page-selector-section select {
+        font-size: 12px;
+    }
+
+    .upload-section h2,
+    .page-selector-section h2,
+    .page-editor-section h2 {
+        font-size: 16px;
+    }
+}
+.page-selector-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Dropdown Styling */
+.page-selector-section select {
+    flex: 1; /* Ensure selectors take equal space */
+    min-width: 200px;
+    max-width: 300px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    color: #333;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.page-selector-section select:focus {
+    border-color: #0073e6;
+    box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+    outline: none;
+}
+
+/* Adjusting for Small Screens */
+@media (max-width: 768px) {
+    .page-selector-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .page-selector-section select {
+        width: 100%;
+    }
+}
+.admin-page-container {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9faff;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Header Styling */
+.admin-header {
+    background-color: #006bb6;
+    color: white;
+    text-align: center;
+    padding: 20px 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px;
+}
+
+.admin-header h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+/* Upload Section */
+.upload-section {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 900px;
+}
+
+.upload-section h2 {
+    font-size: 18px;
+    color: #004b8d;
+    margin-bottom: 10px;
+}
+
+.file-input {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.file-input:focus {
+    border-color: #0073e6;
+    box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+    outline: none;
+}
+
+/* Selectors Section */
+.selectors {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px;
+}
+
+.textbook-selector, .page-selector-section {
+    flex: 1;
+    min-width: 200px;
+    max-width: 400px;
+}
+
+.textbook-selector h2, .page-selector-section h2 {
+    font-size: 16px;
+    color: #004b8d;
+    margin-bottom: 10px;
+}
+
+.dropdown {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: white;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dropdown:focus {
+    border-color: #0073e6;
+    box-shadow: 0 0 5px rgba(0, 115, 230, 0.5);
+    outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-header, .upload-section, .selectors {
+        max-width: 100%;
+    }
+
+    .textbook-selector, .page-selector-section {
+        max-width: 100%;
+    }
+}

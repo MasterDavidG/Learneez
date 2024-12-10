@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['student', 'teacher', 'admin']); // Define possible roles
+            $table->enum('role', ['student', 'teacher', 'admin'])->default('student'); // Define possible roles
+            $table->foreignId('teacher_id')->nullable()->constrained('users')->onDelete('set null'); // Link student to teacher
             $table->rememberToken();
             $table->timestamps();
         });

@@ -9,7 +9,12 @@ class Page extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['textbook_id', 'image_path', 'audio_path'];
+    protected $fillable = ['textbook_id', 'image', 'content', 'page_number'];
+
+    public function buttons()
+    {
+        return $this->hasMany(Button::class);
+    }
 
     public function textbook()
     {

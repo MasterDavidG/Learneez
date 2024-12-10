@@ -4,25 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePagesTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('textbook_id'); // Foreign key to textbooks table
-            $table->string('audio_file')->nullable();
-            $table->text('content');
+            $table->foreignId('textbook_id')->constrained('textbooks')->onDelete('cascade');
             $table->string('image')->nullable();
+            $table->text('content')->nullable();
+            $table->integer('page_number')->nullable();
             $table->timestamps();
-
-            // Foreign key constraint
-            $table->foreign('textbook_id')->references('id')->on('textbooks')->onDelete('cascade');
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('pages');
     }
-}
+};

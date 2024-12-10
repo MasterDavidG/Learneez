@@ -1,66 +1,301 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+исмислих темата
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+избрах технологиите
 
-## About Laravel
+направих прототип на реакт
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Създадох проект с Breeze за да ползвам готовата аутентикация. написах базата данни чрез миграции върху mariahdb сървъра. Промених готовият users така че да има роли за потребителите. Написах factories и seeder. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Направих бекенда: models, controllers 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Започнах с фронтенда, като научих и използвах inertiajs + React. Използвах готовите концепции като ползване на заявки вместо use state. 
+За всяка стъпка съм обновявал router web.php. 
+Промених готовият Welcome page така че да отговаря на моите нужди. Написах Student Dashboard, Student page, Teacher Dashboard, Teacher submissions. Стилизирах всичките с css и написах удобни компоненти като writing canvas, footer etc..
 
-## Learning Laravel
+Направих регистрацията с работещ селектор за ученик или учител.
+Админ страницата има хубави контроли и функционира изцяло. 
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Страниците се пазят в private директорията в папка на ученика, на когото принадлежат, за аудио бутоните е подобно. В базата данни се пазят иманата на файловете, с таблица за бутони, и такава за страници. Има таблица за свързване на страница със съответен бутон чрез id.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+подобрих Welcome page, изглежда забележително, почти завършено. 
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Premium Partners
+import React, { useRef, useState, useEffect } from 'react';
+import { Stage, Layer, Image, Rect, Text } from 'react-konva';
+import { useForm } from '@inertiajs/react';
+import useImage from 'use-image';
+import axios from 'axios';
+import '../../css/AdminPage.css';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import ResponsiveStage from '@/Components/ResponsiveStage';
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+const AdminPage = ({ auth, pages: initialPages }) => {
+    const { data, setData, reset } = useForm({
+        buttons: [],
+        current_audio: null,
+        x: null,
+        y: null,
+    });
 
-## Contributing
+    const [textbooks, setTextbooks] = useState([]);
+    const [pages, setPages] = useState(initialPages || []);
+    const [selectedTextbook, setSelectedTextbook] = useState(null);
+    const [pageId, setPageId] = useState(null);
+    const [isPlacing, setIsPlacing] = useState(false);
+    const [image] = useImage(
+        pageId
+            ? `/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`
+            : null
+    );
+    const mediaRecorderRef = useRef(null);
+    const audioChunks = useRef([]);
+    const audioStreamRef = useRef(null);
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    useEffect(() => {
+        // Fetch all textbooks on load
+        axios.get('/api/textbooks')
+            .then((response) => setTextbooks(response.data))
+            .catch((error) => console.error('Error fetching textbooks:', error));
+    }, []);
 
-## Code of Conduct
+    const handlePDFUpload = async (e) => {
+        const formData = new FormData();
+        formData.append('pdf', e.target.files[0]);
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+        try {
+            await axios.post('/admin/upload-textbook', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            alert('PDF uploaded and pages created successfully!');
+            window.location.reload();
+        } catch (error) {
+            console.error('Error uploading PDF:', error);
+            alert('Failed to upload PDF. Check console for details.');
+        }
+    };
 
-## Security Vulnerabilities
+    const handleTextbookChange = (textbookId) => {
+        setSelectedTextbook(textbookId);
+        setPages([]);
+        setPageId(null);
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+        // Fetch pages for the selected textbook
+        axios.get(`/api/textbooks/${textbookId}/pages`)
+            .then((response) => setPages(response.data))
+            .catch((error) => console.error('Error fetching pages:', error));
+    };
 
-## License
+    const handlePageSelection = (e) => {
+        const _pageId = e.target.value;
+        if (_pageId) {
+            setPageId(parseInt(_pageId, 10));
+            reset();
+        }
+    };
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    const handleStageClick = (e) => {
+        if (!isPlacing) return;
+
+        const pos = e.target.getStage().getPointerPosition();
+        setData({ ...data, x: pos.x, y: pos.y });
+        setIsPlacing(false);
+    };
+
+    const startRecording = () => {
+        navigator.mediaDevices
+            .getUserMedia({ audio: true })
+            .then((stream) => {
+                audioStreamRef.current = stream;
+                const mediaRecorder = new MediaRecorder(stream);
+                mediaRecorderRef.current = mediaRecorder;
+
+                audioChunks.current = [];
+                mediaRecorder.ondataavailable = (event) => audioChunks.current.push(event.data);
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' });
+                    setData({ ...data, current_audio: audioBlob });
+                };
+
+                mediaRecorder.start();
+            })
+            .catch((error) => {
+                console.error('Error accessing microphone:', error);
+                alert('Microphone access denied or unavailable.');
+            });
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+            mediaRecorderRef.current = null;
+        }
+
+        if (audioStreamRef.current) {
+            audioStreamRef.current.getTracks().forEach((track) => track.stop());
+            audioStreamRef.current = null;
+        }
+    };
+
+    const saveButton = async () => {
+        if (!data.x || !data.y || !data.current_audio) {
+            alert('Ensure you have placed the button and recorded audio.');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('page_id', pageId);
+        formData.append('x', data.x);
+        formData.append('y', data.y);
+        formData.append('audio', data.current_audio, `button_audio_${data.buttons.length}.webm`);
+
+        try {
+            await axios.post('/admin/save-button', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            setData({
+                ...data,
+                buttons: [...data.buttons, { x: data.x, y: data.y }],
+                current_audio: null,
+                x: null,
+                y: null,
+            });
+            alert('Button saved successfully!');
+        } catch (error) {
+            console.error('Error saving button:', error);
+            alert('Failed to save button. Check console for details.');
+        }
+    };
+
+    const savePage = async () => {
+        try {
+            await axios.post('/admin/save-page', { page_id: pageId });
+            alert('Page finalized successfully!');
+        } catch (error) {
+            console.error('Error saving page:', error);
+            alert('Failed to finalize page.');
+        }
+    };
+
+    return (
+        <AuthenticatedLayout auth={auth}>
+            <div className="admin-page-container">
+                <header className="admin-header">
+                    <h1>Admin Page</h1>
+                </header>
+
+                <div className="upload-section">
+                    <h2>Upload PDF</h2>
+                    <input type="file" accept="application/pdf" onChange={handlePDFUpload} className="file-input" />
+                </div>
+
+                <div className="selectors">
+                    <div className="textbook-selector">
+                        <h2>Select Textbook</h2>
+                        <select
+                            onChange={(e) => handleTextbookChange(e.target.value)}
+                            value={selectedTextbook || ''}
+                            className="dropdown"
+                        >
+                            <option value="">Choose a textbook...</option>
+                            {textbooks.map((textbook) => (
+                                <option key={textbook.id} value={textbook.id}>
+                                    {textbook.title}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {selectedTextbook && (
+                        <div className="page-selector-section">
+                            <h2>Select Page</h2>
+                            <select
+                                onChange={handlePageSelection}
+                                value={pageId || ''}
+                                className="dropdown"
+                            >
+                                <option value="">Choose a page...</option>
+                                {pages.map((page) => (
+                                    <option key={page.id} value={page.id}>
+                                        Page {page.page_number}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
+                </div>
+
+                {pageId && (
+                    <div className="page-editor-section">
+                        <h2>Page Editor</h2>
+                        {pageId && (
+    <div className="page-editor-section">
+        <h2>Page Editor</h2>
+        <ResponsiveStage
+            imageSrc={
+                pageId
+                    ? `/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`
+                    : null
+            }
+            buttons={data.buttons}
+            onStageClick={(e) => {
+                if (!isPlacing) return;
+
+                const pos = e.target.getStage().getPointerPosition();
+                setData({ ...data, x: pos.x, y: pos.y });
+                setIsPlacing(false);
+            }}
+        />
+
+    </div>
+)}
+
+
+                        <div className="controls">
+                            <button className="button start-recording" onClick={() => setIsPlacing(true)}>
+                                Create Button
+                            </button>
+                            {isPlacing && <p>Click on the page to place the button.</p>}
+
+                            {data.x && data.y && (
+                                <>
+                                    <p>
+                                        Button placed at ({data.x.toFixed(0)}, {data.y.toFixed(0)})
+                                    </p>
+                                    <button className="button start-recording" onClick={startRecording}>
+                                        Start Recording
+                                    </button>
+                                    <button className="button stop-recording" onClick={stopRecording}>
+                                        Stop Recording
+                                    </button>
+                                    {data.current_audio && (
+                                        <>
+                                            <audio controls src={URL.createObjectURL(data.current_audio)} />
+                                            <button
+                                                className="button discard-audio"
+                                                onClick={() => setData({ ...data, current_audio: null })}
+                                            >
+                                                Discard Recording
+                                            </button>
+                                        </>
+                                    )}
+                                    <button className="button save-button" onClick={saveButton}>
+                                        Save Button
+                                    </button>
+                                </>
+                            )}
+                            <button className="button save-page" onClick={savePage}>
+                                Finalize Page
+                            </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </AuthenticatedLayout>
+    );
+};
+
+export default AdminPage;

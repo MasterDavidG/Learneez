@@ -9,15 +9,10 @@ class Textbook extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'user_id'];
+    protected $fillable = ['title'];
 
-    public function pages()
+    public function users()
     {
-        return $this->hasMany(Page::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        return $this->belongsToMany(User::class, 'user_textbooks')->withTimestamps();
     }
 }

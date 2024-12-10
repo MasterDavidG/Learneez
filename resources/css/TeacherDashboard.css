@@ -1,0 +1,138 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.teacher-dashboard {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.dashboard-header {
+    background: linear-gradient(to right, #0077b6, #00b4d8);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    transition: all 0.3s;
+    box-shadow: 0 5px 10px rgba(255, 107, 107, 0.4);
+}
+
+.logout-button:hover {
+    background: #ff4c4c;
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(255, 107, 107, 0.6);
+}
+
+.student-selection-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.adopt-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.student-select {
+    width: 60%;
+    padding: 10px;
+    border: 2px solid #00b4d8;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.student-select:focus {
+    border-color: #0077b6;
+    outline: none;
+}
+
+.adopt-button {
+    background: linear-gradient(to right, #43aa8b, #90be6d);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 5px 10px rgba(67, 170, 139, 0.4);
+}
+
+.adopt-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(67, 170, 139, 0.6);
+}
+
+.assigned-students-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.assigned-students-container h2 {
+    margin-bottom: 15px;
+}
+
+.student-list {
+    list-style: none;
+    padding: 0;
+}
+
+.student-item {
+    background: linear-gradient(to bottom right, #0077b6, #00b4d8);
+    color: white;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 5px 10px rgba(0, 118, 228, 0.3);
+}
+
+.student-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 118, 228, 0.5);
+}
+
+.no-students {
+    text-align: center;
+    color: #666;
+    font-size: 16px;
+}
