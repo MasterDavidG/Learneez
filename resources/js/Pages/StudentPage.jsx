@@ -31,9 +31,8 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, can
     };
 
     const saveDrawing = () => {
-        const stage = canvasRef.current.getStage();
-        const dataURL = stage.toDataURL();
-        onSaveDrawing(dataURL);
+        const drawingJSON = JSON.stringify(lines)
+        onSaveDrawing(drawingJSON);
     };
 
     const playAudio = (audioPath) => {
@@ -118,11 +117,11 @@ const StudentPage = ({ page }) => {
         fetchButtons();
     }, [currentPage]);
 
-    const handleSaveDrawing = async (dataURL) => {
+    const handleSaveDrawing = async (drawingJSON) => {
         try {
             await axios.post('/student/save-drawing', {
                 page_id: currentPage.id,
-                drawing: dataURL,
+                drawing_json: drawingJSON,
             });
             alert('Drawing saved successfully!');
         } catch (error) {

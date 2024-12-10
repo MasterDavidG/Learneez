@@ -72,18 +72,14 @@ class StudentController extends Controller
     {
         $validated = $request->validate([
             'page_id' => 'required|integer|exists:pages,id',
-            'drawing' => 'required|string',
+            'drawing_json' => 'required|string',
         ]);
 
         try {
-            $drawingData = base64_decode(
-                preg_replace('#^data:image/\w+;base64,#i', '', $validated['drawing'])
-            );
-
-            $fileName = 'drawing_' . uniqid() . '.png';
+            $fileName = 'drawing_' . uniqid() . '.json';
             $filePath = "drawings/{$fileName}";
 
-            Storage::put($filePath, $drawingData);
+            Storage::put($filePath, $validated['drawing_json']);
 
             Submission::create([
                 'student_id' => Auth::id(),
