@@ -84,14 +84,14 @@ const AdminPage = ({ auth, pages: initialPages }) => {
             .getUserMedia({ audio: true })
             .then((stream) => {
                 audioStreamRef.current = stream;
-                const mediaRecorder = new MediaRecorder(stream);
+                const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
                 mediaRecorderRef.current = mediaRecorder;
 
                 audioChunks.current = [];
                 mediaRecorder.ondataavailable = (event) => audioChunks.current.push(event.data);
 
                 mediaRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm' });
+                    const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm;codecs=opus' });
                     setData({ ...data, current_audio: audioBlob });
                 };
 
