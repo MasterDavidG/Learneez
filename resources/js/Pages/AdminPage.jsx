@@ -217,7 +217,7 @@ const AdminPage = ({ auth, pages: initialPages }) => {
         onStageClick={(e) => {
             if (!isPlacing) return;
 
-            const pos = e.target.getStage().getPointerPosition();
+            const pos = e.target.getStage().getRelativePointerPosition();
             setData({ ...data, x: pos.x, y: pos.y });
             setIsPlacing(false);
         }}

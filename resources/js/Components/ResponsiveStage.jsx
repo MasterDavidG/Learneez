@@ -15,8 +15,8 @@ const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
                 const containerHeight = containerWidth / aspectRatio;
 
                 setStageSize({
-                    width: containerWidth,
-                    height: containerHeight,
+                    width: image.width,
+                    height: image.height,
                 });
             }
         };
