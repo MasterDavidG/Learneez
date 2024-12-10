@@ -2,6 +2,53 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../../css/TeacherSubmissions.css';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import useImage from 'use-image';
+import { Image, Layer, Line, Stage } from 'react-konva';
+
+const SubmissionPreviewStage = ({ submissionId, src }) => {
+    const [stageSize, setStageSize] = useState({ width: 800, height: 600 });
+    const [image] = useImage(src);
+    const [ submissionJSON, setSubmissionJSON ] = useState([])
+
+    useEffect(() => {
+        axios.get(`http://localhost:8000/api/submission/${submissionId}`).then((response) => {
+            setSubmissionJSON(response.data)
+            console.log(response.data)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (image)
+            setStageSize({
+                width: image.width,
+                height: image.height,
+            });
+    }, [image])
+    return (
+        <Stage
+            width={stageSize.width}
+            height={stageSize.height}
+        >
+            <Layer>
+                {image && <Image image={image} />}
+            </Layer>
+            <Layer>
+                {submissionJSON.map((line, index) => (
+                    <Line
+                        key={index}
+                        points={line.points}
+                        stroke={line.tool === 'pen' ? 'black' : 'white'}
+                        strokeWidth={line.width}
+                        tension={0.5}
+                        lineCap="round"
+                        lineJoin="round"
+                        globalCompositeOperation={line.tool === 'pen' ? 'source-over' : 'destination-out'}
+                    />
+                ))}
+            </Layer>
+        </Stage>
+    )
+ };
 
 const TeacherSubmissions = ({ auth, studentId }) => {
     const [submissions, setSubmissions] = useState([]);
@@ -83,15 +130,12 @@ const TeacherSubmissions = ({ auth, studentId }) => {
                     <div className="submissions-section">
                         <h2>Student Submissions</h2>
                         {submissions.length > 0 ? (
-                            submissions.map((submission) => (
-                                <div className="submission-card" key={submission.id}>
+                            submissions.map((submission, i) => (
+                                <div className="submission-card" key={i}>
                                     <h3>Page ID: {submission.page_id}</h3>
-                                    {submission.drawing_url ? (
-                                        <img
-                                            src={submission.drawing_url}
-                                            alt={`Drawing by student ${studentId}`}
-                                            className="submission-image"
-                                        />
+                                    {(submission.textbook_id && submission.image) ? (
+                                        <SubmissionPreviewStage submissionId={submission.id} src={`/pages/${submission.textbook_id}/${submission.image}`}>
+                                        </SubmissionPreviewStage>
                                     ) : (
                                         <p>Drawing not available</p>
                                     )}

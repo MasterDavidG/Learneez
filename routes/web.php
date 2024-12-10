@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/teacher/books/{book}/pages', [TeacherController::class, 'getPagesForBook'])->name('teacher.book.pages');
         Route::post('/api/teacher/assign-homework', [TeacherController::class, 'assignHomework'])->name('teacher.assignHomework');
         Route::get('/api/submissions', [SubmissionController::class, 'getSubmissions'])->name('api.submissions');
+        Route::get('/api/submission/{submissionId}', [SubmissionController::class, 'getSubmissionJSON'])->name('api.submissionJSON');
         Route::get('/api/students', [TeacherController::class, 'getStudents'])->name('api.students');
         Route::post('/api/teacher/adopt-student', [TeacherController::class, 'adoptStudent']);
         Route::get('/api/unassigned-students', [TeacherController::class, 'getUnassignedStudents']);

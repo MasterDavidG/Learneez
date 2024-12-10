@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Submission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionController extends Controller
 {
@@ -15,14 +17,27 @@ class SubmissionController extends Controller
             return response()->json(['error' => 'Student ID is required'], 400);
         }
 
-        $submissions = Submission::where('student_id', $studentId)
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function ($submission) {
-                $submission->drawing_url = route('submissions.drawing', ['filename' => $submission->drawing]);
-                return $submission;
-            });
+        $submissions = DB::table('submissions')
+            ->orderBy('submissions.created_at', 'desc')
+            ->leftJoin('pages', 'pages.id', 'submissions.page_id')
+            ->select('submissions.*', 'pages.textbook_id', 'pages.image')
+            ->get();
 
         return response()->json($submissions);
+    }
+
+    public function getSubmissionJSON(Request $request, $submissionId)
+    {
+        $submission = Submission::where('id', $submissionId)->first();
+        $filePath = "drawings/{$submission->drawing}";
+        
+        if (!Storage::exists($filePath)) {
+            abort(404, 'File not found');
+        }
+    
+        $file = Storage::get($filePath);
+        $mimeType = Storage::mimeType($filePath);
+    
+        return response($file, 200)->header('Content-Type', $mimeType);
     }
 }
