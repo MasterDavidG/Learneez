@@ -64,25 +64,6 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function showDrawing($filename)
-    {
-        try {
-            $filePath = "drawings/{$filename}";
-
-            if (!Storage::exists($filePath)) {
-                Log::warning("Drawing file not found: {$filePath}");
-                abort(404, 'File not found');
-            }
-
-            $file = Storage::get($filePath);
-            $mimeType = Storage::mimeType($filePath) ?? 'image/png';
-
-            return response($file, 200)->header('Content-Type', $mimeType);
-        } catch (\Exception $e) {
-            Log::error("Error fetching drawing: {$e->getMessage()}");
-            return response()->json(['error' => 'Failed to load drawing'], 500);
-        }
-    }
 
     public function getBooks()
     {

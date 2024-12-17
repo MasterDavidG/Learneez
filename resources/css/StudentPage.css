@@ -75,3 +75,55 @@ button:hover {
   gap: 4px;
   font-size: 30px;
 }
+/* Container for Save and Submit Buttons */
+.drawing-buttons-container {
+  display: flex;
+  justify-content: flex-start; /* Align horizontally to the left */
+  gap: 15px; /* Space between buttons */
+  margin-top: 15px; /* Add space above the button container */
+  margin-bottom: 10px; /* Add space below the button container */
+}
+
+/* Special Button Styling */
+.special-button {
+  font-family: 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 10px 20px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Space between icon and text */
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Save Button Style */
+.save-button {
+  background-color: #28a745; /* Bright Green */
+  color: white;
+  border-color: #218838; /* Slightly darker green border */
+}
+
+.save-button:hover {
+  background-color: #218838; /* Darker green on hover */
+  border-color: #1e7e34;
+  transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Submit Button Style */
+.submit-button {
+  background-color: #007bff; /* Bright Blue */
+  color: white;
+  border-color: #0056b3; /* Slightly darker blue border */
+}
+
+.submit-button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  border-color: #004085;
+  transform: translateY(-2px); /* Slight lift effect */
+}

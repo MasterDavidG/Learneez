@@ -6,8 +6,11 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 
 const StudentDashboard = ({ auth }) => {
     const [textbooks, setTextbooks] = useState([]);
+    const [userTextbooks, setUserTextbooks] = useState([]);
+
     const [pages, setPages] = useState([]);
     const [selectedTextbook, setSelectedTextbook] = useState(null);
+    const [assignTextbookId, setAssignTextbookId] = useState(null); // For textbook assignment dropdown
     const [homeworkPage, setHomeworkPage] = useState(null);
     const [profile, setProfile] = useState({
         name: '',
@@ -16,18 +19,33 @@ const StudentDashboard = ({ auth }) => {
     const pagesSectionRef = useRef(null);
 
     useEffect(() => {
+        fetchTextbooks();
+        fetchUserTextbooks();
+        fetchHomeworkStatus();
+        fetchProfile();
+    }, []);
+
+    const fetchTextbooks = () => {
         axios.get('/api/textbooks')
             .then((response) => setTextbooks(response.data))
             .catch((error) => console.error('Error fetching textbooks:', error));
-
+    };
+    const fetchUserTextbooks = () => {
+        axios.get('/api/user/textbooks')
+            .then((response) => setUserTextbooks(response.data))
+            .catch((error) => console.error('Error fetching textbooks:', error));
+    };
+    const fetchHomeworkStatus = () => {
         axios.get('/api/student/homework-status')
             .then((response) => setHomeworkPage(response.data.page_id))
             .catch((error) => console.error('Error fetching homework status:', error));
+    };
 
+    const fetchProfile = () => {
         axios.get('/api/student/profile')
             .then((response) => setProfile(response.data))
             .catch((error) => console.error('Error fetching profile:', error));
-    }, []);
+    };
 
     const handleTextbookChange = (textbookId) => {
         setSelectedTextbook(textbookId);
@@ -36,12 +54,28 @@ const StudentDashboard = ({ auth }) => {
         axios.get(`/api/textbooks/${textbookId}/pages`)
             .then((response) => {
                 setPages(response.data);
-
                 setTimeout(() => {
                     pagesSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
                 }, 100);
             })
             .catch((error) => console.error('Error fetching pages:', error));
+    };
+
+    const handleAssignTextbook = () => {
+        if (!assignTextbookId) {
+            alert('Please select a textbook.');
+            return;
+        }
+
+        axios.post('/student/assign-textbook', { textbook_id: assignTextbookId })
+            .then((response) => {
+                alert(response.data.message);
+                fetchUserTextbooks();
+            })
+            .catch((error) => {
+                console.error('Error assigning textbook:', error);
+                alert(error.response?.data?.error || 'Failed to assign textbook.');
+            });
     };
 
     const handleMarkAsDone = (pageId) => {
@@ -58,9 +92,7 @@ const StudentDashboard = ({ auth }) => {
             axios.post('/api/student/remove-teacher')
                 .then(() => {
                     alert('Teacher removed successfully!');
-                    // Optionally reload the profile
-                    axios.get('/api/student/profile')
-                        .then((response) => setProfile(response.data));
+                    fetchProfile();
                 })
                 .catch((error) => console.error('Error removing teacher:', error));
         }
@@ -72,6 +104,27 @@ const StudentDashboard = ({ auth }) => {
                 <header className="dashboard-header">
                     <div className="header-content">
                         <h1>Welcome, {profile.name || 'Student'}!</h1>
+                        {/* Dropdown to assign a textbook */}
+                        <div className="assign-textbook-container">
+                            <select
+                                value={assignTextbookId || ''}
+                                onChange={(e) => setAssignTextbookId(e.target.value)}
+                                className="dropdown assign-textbook-dropdown"
+                            >
+                                <option value="">Select a Textbook</option>
+                                {textbooks.map((textbook) => (
+                                    <option key={textbook.id} value={textbook.id}>
+                                        {textbook.title}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                onClick={handleAssignTextbook}
+                                className="button assign-textbook-button"
+                            >
+                                Assign Textbook
+                            </button>
+                        </div>
                         <button
                             onClick={handleRemoveTeacher}
                             className="button remove-teacher"
@@ -88,15 +141,15 @@ const StudentDashboard = ({ auth }) => {
                 <section className="textbook-section">
                     <h2>Choose a Textbook</h2>
                     <div className="books-container">
-                        {textbooks.map((textbook) => (
+                        {userTextbooks.map((userTextbook) => (
                             <div
-                                key={textbook.id}
+                                key={userTextbook.id}
                                 className={`book-item ${
-                                    textbook.id === selectedTextbook ? 'selected' : ''
+                                    userTextbook.id === selectedTextbook ? 'selected' : ''
                                 }`}
-                                onClick={() => handleTextbookChange(textbook.id)}
+                                onClick={() => handleTextbookChange(userTextbook.id)}
                             >
-                                {textbook.title}
+                                {userTextbook.title}
                             </div>
                         ))}
                     </div>

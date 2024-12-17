@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Textbook;
+use Illuminate\Support\Facades\DB;
 use App\Models\Assignment;
 use App\Models\Submission;
 use App\Models\Page;
 use App\Models\Button;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +22,21 @@ class StudentController extends Controller
     {
         return inertia('StudentDashboard');
     }
-
+    public function getProfile()
+    {
+        try {
+            $user = Auth::user();
+    
+            return response()->json([
+                'name' => $user->name,
+                'email' => $user->email,
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Error fetching profile: {$e->getMessage()}");
+            return response()->json(['error' => 'Failed to fetch profile.'], 500);
+        }
+    }
+    
     /**
      * Get Homework Status for a Specific Page
      */
@@ -70,31 +86,78 @@ class StudentController extends Controller
      */
     public function saveDrawing(Request $request)
     {
+        // Validate input
         $validated = $request->validate([
             'page_id' => 'required|integer|exists:pages,id',
-            'drawing_json' => 'required|string',
+            'drawing_json' => 'required|string'
         ]);
 
         try {
+            $user = Auth::user();
+
+            // Check for an existing submission for the student and page
+            $submission = Submission::where('student_id', $user->id)
+                ->where('page_id', $validated['page_id'])
+                ->first();
+
             $fileName = 'drawing_' . uniqid() . '.json';
-            $filePath = "drawings/{$fileName}";
 
-            Storage::put($filePath, $validated['drawing_json']);
+            if ($submission) {
+                // Handle save logic
+                $filePath = "drawings/{$fileName}";
+                Storage::put($filePath, $validated['drawing_json']);
+                // Update existing submission
+                $submission->update([
+                    'drawing' => $fileName,
+                    'status' => 'saved',
+                    'updated_at' => now(),
+                ]);
+            } else {
+                // Create new submission
+                Submission::create([
+                    'student_id' => $user->id,
+                    'teacher_id' => $user->teacher_id,
+                    'page_id' => $validated['page_id'],
+                    'drawing' => $fileName,
+                    'status' => 'saved',
+                ]);
+            }
 
-            Submission::create([
-                'student_id' => Auth::id(),
-                'teacher_id' => Auth::user()->teacher_id,
-                'page_id' => $validated['page_id'],
-                'drawing' => $fileName,
+            return response()->json([
+                'message' => 'Drawing saved successfully!',
+                'status' => 'saved',
             ]);
-
-            return response()->json(['message' => 'Drawing saved successfully']);
         } catch (\Exception $e) {
-            Log::error("Error saving drawing: {$e->getMessage()}");
-
-            return response()->json(['error' => 'Failed to save drawing'], 500);
+            Log::error("Error saving/submitting drawing: {$e->getMessage()}");
+            return response()->json(['error' => 'Failed to process the drawing'], 500);
         }
     }
+
+    /**
+     * Submit a Drawing Submission
+     */
+    public function submitDrawing(Request $request) {
+
+        $validated = $request->validate([
+            'page_id' => 'required|integer|exists:pages,id'
+        ]);
+
+        $user = Auth::user();
+
+        $submission = Submission::where('student_id', $user->id)
+                ->where('page_id', $validated['page_id']);
+
+        $submission->update([
+            'status' => 'submitted',
+            'updated_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'Drawing submitted successfully!',
+            'status' => 'submitted',
+        ]);
+    }
+
 
     /**
      * Show Student Page
@@ -226,4 +289,38 @@ class StudentController extends Controller
             return response()->json(['error' => 'Failed to fetch previous page.'], 500);
         }
     }
+
+
+    public function assignTextbook(Request $request)
+    {
+        try {
+            $user = Auth::user();
+    
+            // Validate that the input contains a valid textbook ID
+            $validated = $request->validate([
+                'textbook_id' => 'required|exists:textbooks,id',
+            ]);
+    
+            // Check if the relationship already exists
+            $alreadyAssigned = DB::table('user_textbooks')
+                ->where('user_id', $user->id)
+                ->where('textbook_id', $validated['textbook_id'])
+                ->exists();
+    
+            if ($alreadyAssigned) {
+                return response()->json(['message' => 'Textbook already assigned to this student.'], 200);
+            }
+    
+            // Attach textbook to the user
+            $_user = User::where('id', $user->id)->first();
+            $_user->textbooks()->attach($validated['textbook_id']);
+    
+            return response()->json(['message' => 'Textbook assigned successfully.'], 200);
+        } catch (\Exception $e) {
+            Log::error("Error assigning textbook: {$e->getMessage()}");
+    
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
 }

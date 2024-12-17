@@ -42,6 +42,6 @@ class User extends Authenticatable
     }
     public function textbooks()
     {
-        return $this->belongsToMany(Textbook::class, 'user_textbooks')->withTimestamps();
+        return $this->belongsToMany(Textbook::class, 'user_textbooks', 'user_id', 'textbook_id')->withTimestamps();
     }
 }

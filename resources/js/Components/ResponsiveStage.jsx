@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Stage, Layer, Image, Rect, Text } from 'react-konva';
+import { Stage, Layer, Image, Rect, Text, Circle } from 'react-konva';
 import useImage from 'use-image';
 
 const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
@@ -7,6 +7,10 @@ const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
     const [stageSize, setStageSize] = useState({ width: 800, height: 600 });
     const stageContainerRef = useRef(null);
 
+    const playAudio = (audioPath) => {
+        const audio = new Audio(audioPath); // Use full URL returned from backend
+        audio.play().catch((error) => console.error('Error playing audio:', error));
+    };
     useEffect(() => {
         const resizeStage = () => {
             if (stageContainerRef.current && image) {
@@ -35,6 +39,7 @@ const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
                 onClick={onStageClick}
                 style={{ border: '1px solid #ccc', margin: '0 auto' }}
             >
+                
                 <Layer>
                     {image && (
                         <Image
@@ -43,23 +48,18 @@ const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
                             height={stageSize.height}
                         />
                     )}
+                    
+                </Layer>
+                <Layer>
                     {buttons.map((button, index) => (
-                        <React.Fragment key={index}>
-                            <Rect
-                                x={button.x - 15}
-                                y={button.y - 15}
-                                width={30}
-                                height={30}
-                                fill="blue"
-                            />
-                            <Text
-                                x={button.x - 10}
-                                y={button.y - 10}
-                                text="▶"
-                                fontSize={20}
-                                fill="white"
-                            />
-                        </React.Fragment>
+                        <Circle
+                            key={index}
+                            x={button.x}
+                            y={button.y}
+                            radius={15} // Visible size for audio button
+                            fill="blue"
+                            onClick={() => playAudio(button.audio)}
+                        />
                     ))}
                 </Layer>
             </Stage>

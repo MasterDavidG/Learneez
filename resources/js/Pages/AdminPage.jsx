@@ -206,62 +206,60 @@ const AdminPage = ({ auth, pages: initialPages }) => {
 
                 {pageId && (
     <div className="page-editor-section">
-    <h2>Page Editor</h2>
-    <ResponsiveStage
-        imageSrc={
-            pageId
-                ? `/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`
-                : null
-        }
-        buttons={data.buttons}
-        onStageClick={(e) => {
-            if (!isPlacing) return;
+        <h2>Page Editor</h2>
+        <ResponsiveStage
+            imageSrc={
+                pageId
+                    ? `/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`
+                    : null
+            }
+            buttons={data.buttons}
+            onStageClick={(e) => {
+                if (!isPlacing) return;
 
-            const pos = e.target.getStage().getRelativePointerPosition();
-            setData({ ...data, x: pos.x, y: pos.y });
-            setIsPlacing(false);
-        }}
-    />
+                const pos = e.target.getStage().getRelativePointerPosition();
+                setData({ ...data, x: pos.x, y: pos.y });
+                setIsPlacing(false);
+            }}
+        />
 
-    <div className="controls">
-        <button className="button start-recording" onClick={() => setIsPlacing(true)}>
-            Create Button
-        </button>
-        {isPlacing && <p>Click on the page to place the button.</p>}
-
-        {data.x && data.y && (
-            <>
-                <p>
-                    Button placed at ({data.x.toFixed(0)}, {data.y.toFixed(0)})
-                </p>
-                <button className="button start-recording" onClick={startRecording}>
-                    Start Recording
-                </button>
-                <button className="button stop-recording" onClick={stopRecording}>
-                    Stop Recording
-                </button>
-                {data.current_audio && (
-                    <>
-                        <audio controls src={URL.createObjectURL(data.current_audio)} />
-                        <button
-                            className="button discard-audio"
-                            onClick={() => setData({ ...data, current_audio: null })}
-                        >
-                            Discard Recording
-                        </button>
-                    </>
-                )}
-                <button className="button save-button" onClick={saveButton}>
-                    Save Button
-                </button>
-            </>
+        {/* Audio Player Section */}
+        {data.current_audio && (
+            <div className="audio-player-section">
+                <audio controls src={URL.createObjectURL(data.current_audio)} />
+            </div>
         )}
-        <button className="button save-page" onClick={savePage}>
-            Finalize Page
-        </button>
+
+        {/* Controls Section */}
+        <div className="controls">
+            <button className="button start-recording" onClick={() => setIsPlacing(true)}>
+                Create Button
+            </button>
+            {isPlacing && <p>Click on the page to place the button.</p>}
+
+            {data.x && data.y && (
+                <>
+                    <p>
+                        Button placed at ({data.x.toFixed(0)}, {data.y.toFixed(0)})
+                    </p>
+                    <button className="button start-recording" onClick={startRecording}>
+                        Start Recording
+                    </button>
+                    <button className="button stop-recording" onClick={stopRecording}>
+                        Stop Recording
+                    </button>
+                    <button className="button save-button" onClick={saveButton}>
+                        Save Button
+                    </button>
+                </>
+            )}
+            <button className="button save-page" onClick={savePage}>
+                Finalize Page
+            </button>
+        </div>
     </div>
-</div>
 )}
+
             </div>
         </AuthenticatedLayout>
     );

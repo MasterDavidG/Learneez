@@ -48,15 +48,20 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['auth', 'role:student'])->group(function () {
         Route::get('/student', fn() => Inertia::render('StudentDashboard'))->name('student.dashboard');
-    
+        Route::middleware(['auth', 'role:student'])->get('/api/student/profile', [StudentController::class, 'getProfile'])->name('student.profile');
+        Route::get('/api/user/textbooks', [TextbookController::class, 'userTextbooks'])->name('api.user.textbooks');
+
         // Route for rendering a specific student page
         Route::get('/student/page/{pageId}', [StudentController::class, 'showStudentPage'])->name('student.page');
     
         // API route for fetching buttons associated with a page
         Route::get('/api/student/page/{pageId}/buttons', [StudentController::class, 'fetchPageButtons'])->name('student.page.buttons');
-    
+
         // Save drawing submission
-        Route::post('/student/save-drawing', [StudentController::class, 'saveDrawing'])->name('student.saveDrawing');
+        Route::post('/student/drawing/save', [StudentController::class, 'saveDrawing'])->name('student.saveDrawing');
+
+        // Submit drawing submission
+        Route::post('/student/drawing/submit', [StudentController::class, 'submitDrawing'])->name('student.submitDrawing');
     
         // Mark a page as done
         Route::post('/student/page/{pageId}/mark-as-done', [StudentController::class, 'markAsDone'])->name('student.page.markAsDone');
@@ -74,7 +79,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/buttons/audio/{textbookId}/{fileName}', [ButtonController::class, 'serveAudio'])
         ->name('button.audio');    });
 
-
+        Route::post('/student/assign-textbook', [StudentController::class, 'assignTextbook'])
+        ->name('student.assignTextbook')
+        ->middleware(['auth', 'role:student']);
+    
     // Teacher Routes
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
@@ -94,7 +102,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::post('/admin/upload-textbook', [AdminController::class, 'uploadTextbook'])->name('admin.uploadTextbook');
         Route::post('/admin/save-page', [AdminController::class, 'savePage'])->name('admin.savePage');
-        // Route to show submission drawings
+
+               // Route to show submission drawings
         Route::middleware(['auth', 'role:admin'])->group(function () {
             Route::post('/admin/save-button', [AdminController::class, 'saveButton'])->name('admin.saveButton');
         });
@@ -103,6 +112,9 @@ Route::middleware('auth')->group(function () {
 
 // Logout Route
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
+
+Route::get('/page/{pageId}/buttons', [ButtonController::class, 'fetchPageButtons']);
+Route::get('/api/buttons/{pageId}', [ButtonController::class, 'fetchButtons']);
 
 // Public API Endpoints
 Route::get('/api/textbooks', [TextbookController::class, 'index'])->name('api.textbooks');

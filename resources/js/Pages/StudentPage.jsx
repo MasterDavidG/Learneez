@@ -5,8 +5,7 @@ import axios from 'axios';
 import { FaPen, FaEraser, FaSave } from 'react-icons/fa';
 import '../../css/StudentPage.css';
 
-const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, canvasSize }) => {
-    const [lines, setLines] = useState([]);
+const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, onSubmitDrawing, canvasSize }) => {    const [lines, setLines] = useState([]);
     const isDrawing = useRef(false);
     const canvasRef = useRef(null);
 
@@ -31,8 +30,13 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, can
     };
 
     const saveDrawing = () => {
-        const drawingJSON = JSON.stringify(lines)
+        const drawingJSON = JSON.stringify(lines);
         onSaveDrawing(drawingJSON);
+    };
+
+    const submitDrawing = () => {
+        const drawingJSON = JSON.stringify(lines);
+        onSubmitDrawing(drawingJSON);
     };
 
     const playAudio = (audioPath) => {
@@ -80,8 +84,18 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, can
                     ))}
                 </Layer>
             </Stage>
-            <button onClick={saveDrawing} className="icon-button"><FaSave /> Save</button>
-        </div>
+            <div className="drawing-buttons-container">
+    <button type="button" onClick={saveDrawing} className="special-button save-button">
+        <FaSave /> Save
+    </button>
+    {onSubmitDrawing && (
+        <button type="button" onClick={submitDrawing} className="special-button submit-button">
+            Submit
+        </button>
+    )}
+</div>
+
+               </div>
     );
 };
 
@@ -93,7 +107,7 @@ const StudentPage = ({ page }) => {
     const [currentPageImage] = useImage(imageUrl || '');
     const [canvasSize, setCanvasSize] = useState({ width: 800, height: 600 });
     const [buttons, setButtons] = useState([]); // State for audio buttons
-
+    const [isSaved, setIsSaved] = useState(false); // Track if saved
     useEffect(() => {
         if (currentPage) {
             const constructedImageUrl = `/pages/${currentPage.textbook_id}/${currentPage.image}`;
@@ -119,14 +133,28 @@ const StudentPage = ({ page }) => {
 
     const handleSaveDrawing = async (drawingJSON) => {
         try {
-            await axios.post('/student/save-drawing', {
+            await axios.post('/student/drawing/save', {
                 page_id: currentPage.id,
-                drawing_json: drawingJSON,
+                drawing_json: drawingJSON
             });
             alert('Drawing saved successfully!');
+            setIsSaved(true); // Enable the submit button
         } catch (error) {
             console.error('Error saving drawing:', error);
             alert('Error saving drawing.');
+        }
+    };
+
+    const handleSubmitDrawing = async (drawingJSON) => {
+        try {
+            await axios.post('/student/drawing/submit', {
+                page_id: currentPage.id,
+                drawing_json: drawingJSON
+            });
+            alert('Drawing submitted successfully!');
+        } catch (error) {
+            console.error('Error submitting drawing:', error);
+            alert('Error submitting drawing.');
         }
     };
 
@@ -174,6 +202,7 @@ const StudentPage = ({ page }) => {
                 tool={tool}
                 penSize={penSize}
                 onSaveDrawing={handleSaveDrawing}
+                onSubmitDrawing={isSaved ? handleSubmitDrawing : null} // Enable submit only if saved
                 canvasSize={canvasSize}
             />
             <div className="side-controls">
