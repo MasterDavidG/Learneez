@@ -74,10 +74,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/student/page/{pageId}/buttons', [StudentController::class, 'fetchPageButtons']);
         Route::get('/api/buttons/{pageId}', [ButtonController::class, 'fetchButtons'])
             ->name('buttons.fetch');
-
-        // Route to serve audio files for a button
-        Route::get('/api/buttons/audio/{textbookId}/{fileName}', [ButtonController::class, 'serveAudio'])
-            ->name('button.audio');
     });
 
     Route::post('/student/assign-textbook', [StudentController::class, 'assignTextbook'])
@@ -111,6 +107,10 @@ Route::middleware('auth')->group(function () {
             Route::post('/admin/save-button', [AdminController::class, 'saveButton'])->name('admin.saveButton');
         });
     });
+
+    // Route to serve audio files for a button
+    Route::get('/api/buttons/audio/{textbookId}/{fileName}', [ButtonController::class, 'serveAudio'])
+        ->name('button.audio');
 });
 
 // Logout Route
