@@ -50,7 +50,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/student', fn() => Inertia::render('StudentDashboard'))->name('student.dashboard');
         Route::middleware(['auth', 'role:student'])->get('/api/student/profile', [StudentController::class, 'getProfile'])->name('student.profile');
         Route::get('/api/user/textbooks', [TextbookController::class, 'userTextbooks'])->name('api.user.textbooks');
-
+        Route::get('/student/submissions', fn() => Inertia::render('StudentSubmissions'))->name('student.submissions');
         // Route for rendering a specific student page
         Route::get('/student/page/{pageId}', [StudentController::class, 'showStudentPage'])->name('student.page');
 
@@ -62,7 +62,14 @@ Route::middleware('auth')->group(function () {
 
         // Submit drawing submission
         Route::post('/student/drawing/submit', [StudentController::class, 'submitDrawing'])->name('student.submitDrawing');
+        Route::get('/api/student/submissions', [SubmissionController::class, 'getStudentSubmissions'])
+        ->name('student.submissions');
 
+    Route::post('/api/student/submission/save', [SubmissionController::class, 'saveStudentSubmission'])
+        ->name('student.submission.save');
+
+    Route::get('/api/student/submission/{submissionId}', [SubmissionController::class, 'viewStudentSubmission'])
+        ->name('student.submission.view');
         // Mark a page as done
         Route::post('/student/page/{pageId}/mark-as-done', [StudentController::class, 'markAsDone'])->name('student.page.markAsDone');
 
@@ -83,18 +90,21 @@ Route::middleware('auth')->group(function () {
     // Teacher Routes
     Route::middleware(['auth', 'role:teacher'])->group(function () {
         Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
-        Route::get('/teacher/submissions', [TeacherController::class, 'viewSubmissions'])->name('teacher.submissions');
         Route::get('/teacher/books', [TeacherController::class, 'getBooks'])->name('teacher.books');
         Route::get('/teacher/books/{book}/pages', [TeacherController::class, 'getPagesForBook'])->name('teacher.book.pages');
         Route::post('/api/teacher/assign-homework', [TeacherController::class, 'assignHomework'])->name('teacher.assignHomework');
-        Route::get('/api/submissions', [SubmissionController::class, 'getSubmissions'])->name('api.submissions');
-        Route::get('/api/submission/{submissionId}', [SubmissionController::class, 'getSubmissionJSON'])->name('api.submissionJSON');
+        
         Route::get('/api/students', [TeacherController::class, 'getStudents'])->name('api.students');
         Route::post('/api/teacher/adopt-student', [TeacherController::class, 'adoptStudent']);
         Route::get('/api/unassigned-students', [TeacherController::class, 'getUnassignedStudents']);
         Route::get('/teacher/drawings/{filename}', [TeacherController::class, 'showDrawing'])
             ->name('teacher.showDrawing');
     });
+
+        Route::get('/api/submissions', [SubmissionController::class, 'getSubmissions'])->name('api.submissions');
+        Route::get('/teacher/submissions', [SubmissionController::class, 'viewSubmissions'])->name('teacher.submissions');
+
+    Route::get('/api/submission/{submissionId}', [SubmissionController::class, 'getSubmissionJSON'])->name('api.submissionJSON');
 
     // Admin Routes
     Route::middleware(['auth', 'role:admin'])->group(function () {

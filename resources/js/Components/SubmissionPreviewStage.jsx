@@ -12,7 +12,7 @@ const SubmissionPreviewStage = ({ submissionId, src }) => {
     // Fetch submission drawing JSON
     useEffect(() => {
         axios
-            .get(`http://localhost:8000/api/submission/${submissionId}`)
+            .get(`/api/submission/${submissionId}`)
             .then((response) => {
                 setSubmissionJSON(response.data);
             })

@@ -12,11 +12,24 @@ const TeacherSubmissions = ({ auth, studentId }) => {
     const [selectedPage, setSelectedPage] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Fetch submissions and textbooks on load
     useEffect(() => {
         if (studentId) fetchSubmissions();
         fetchTextbooks();
     }, [studentId]);
+    // Fetch pages when a textbook is selected
+    useEffect(() => {
+        const fetchPages = async () => {
+            if (selectedTextbook) {
+                try {
+                    const response = await axios.get(`/api/textbooks/${selectedTextbook}/pages`);
+                    setPages(response.data);
+                } catch (error) {
+                    console.error('Error fetching pages:', error);
+                }
+            }
+        };
+        fetchPages();
+    }, [selectedTextbook]);
 
     const fetchSubmissions = async () => {
         try {
@@ -35,22 +48,6 @@ const TeacherSubmissions = ({ auth, studentId }) => {
             console.error('Error fetching textbooks:', error);
         }
     };
-
-    // Fetch pages when a textbook is selected
-    useEffect(() => {
-        const fetchPages = async () => {
-            if (selectedTextbook) {
-                try {
-                    const response = await axios.get(`/api/textbooks/${selectedTextbook}/pages`);
-                    setPages(response.data);
-                } catch (error) {
-                    console.error('Error fetching pages:', error);
-                }
-            }
-        };
-
-        fetchPages();
-    }, [selectedTextbook]);
 
     const handleAssignHomework = async () => {
         if (!selectedTextbook || !selectedPage) {
@@ -75,17 +72,13 @@ const TeacherSubmissions = ({ auth, studentId }) => {
 
     return (
         <AuthenticatedLayout auth={auth}>
-            <div className="teacher-submissions-container">
-                <header>
-                    <h1>Submissions for Student {studentId}</h1>
-                </header>
-
+            <div className="teacher-container">
                 {/* Assign Homework Section */}
-                <div className="assignment-section">
+                <div className="assign-section">
                     <h2>Assign Homework</h2>
-                    <div className="dropdowns">
+                    <div className="dropdown-container">
                         <select
-                            onChange={(e) => handleTextbookChange(e.target.value)}
+                            onChange={(e) => setSelectedTextbook(e.target.value)}
                             value={selectedTextbook || ''}
                             className="dropdown"
                         >
@@ -112,22 +105,18 @@ const TeacherSubmissions = ({ auth, studentId }) => {
                             </select>
                         )}
                     </div>
-                    <button
-                        onClick={handleAssignHomework}
-                        className="assign-button"
-                        disabled={loading}
-                    >
-                        {loading ? 'Assigning...' : 'Assign as Homework'}
+                    <button onClick={handleAssignHomework} className="assign-btn" disabled={loading}>
+                        {loading ? 'Assigning...' : 'Assign Homework'}
                     </button>
                 </div>
 
-                {/* Scrollable Submissions Section */}
+                {/* Submissions Section */}
                 <div className="submissions-section">
                     <h2>Student Submissions</h2>
-                    <div className="scrollable-container">
+                    <div className="submissions-scroll">
                         {submissions.length > 0 ? (
                             submissions.map((submission) => (
-                                <div key={submission.id} className="submission-stage">
+                                <div key={submission.id} className="submission-item">
                                     <SubmissionPreviewStage
                                         submissionId={submission.id}
                                         src={`/pages/${submission.textbook_id}/${submission.image}`}
@@ -141,7 +130,6 @@ const TeacherSubmissions = ({ auth, studentId }) => {
                 </div>
             </div>
         </AuthenticatedLayout>
-    
     );
 };
 
