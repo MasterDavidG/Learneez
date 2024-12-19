@@ -19,42 +19,67 @@ class AdminController extends Controller
         return inertia('AdminPage', ['pages' => $pages]);
     }
 
-    public function uploadTextbook(Request $request)
+    public function uploadAndProcessTextbook(Request $request)
     {
-        $request->validate(['pdf' => 'required|file|mimes:pdf|max:20480']); // 20MB limit
-
+        // Validate the input fields: title and PDF
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'pdf' => 'required|file|mimes:pdf|max:20480', // Max size 20MB
+        ]);
+    
         try {
-            // Store uploaded PDF
-            $pdfPath = $request->file('pdf')->store('textbooks');
-
-            $textBook = Textbook::create([
-                'title' => 'Uchebik Test',
+            Log::info('Starting textbook upload and processing...');
+    
+            // Store uploaded PDF to 'textbooks' directory
+            $pdfPath = $request->file('pdf')->store('textbooks'); // Correct path
+            Log::info("PDF successfully stored at: {$pdfPath}");
+    
+            // Create textbook record with the given title
+            $textbook = Textbook::create([
+                'title' => $request->title,
             ]);
-
-            Storage::makeDirectory("pages/{$textBook->id}");
-            Storage::makeDirectory("audio/{$textBook->id}");
-
-            $pdf = new Pdf(storage_path("app/private/{$pdfPath}"));
+            Log::info("Textbook created: ID {$textbook->id}, Title: {$textbook->title}");
+    
+            // Create directories for pages and audio
+            Storage::makeDirectory("pages/{$textbook->id}");
+            Storage::makeDirectory("audio/{$textbook->id}");
+            Log::info("Directories created for textbook ID: {$textbook->id}");
+    
+            // Process PDF pages
+            $pdf = new Pdf(storage_path("app/private/{$pdfPath}")); // Adjusted path
             $pageCount = $pdf->pageCount();
-
+            Log::info("PDF has {$pageCount} pages.");
+    
             for ($i = 1; $i <= $pageCount; $i++) {
                 $imageName = "page_{$i}.jpg";
-                $pdf->selectPage($i)->save(storage_path("app/private/pages/{$textBook->id}/{$imageName}"));
-
+    
+                // Save each page as an image
+                $pdf->selectPage($i)->save(storage_path("app/private/pages/{$textbook->id}/{$imageName}"));
+                Log::info("Processed page {$i} for textbook ID {$textbook->id}");
+    
+                // Create a record in the 'pages' table
                 Page::create([
-                    'textbook_id' => $textBook->id,
+                    'textbook_id' => $textbook->id,
                     'image' => $imageName,
                     'page_number' => $i,
                 ]);
             }
-
-            return response()->json(['message' => 'Textbook uploaded and pages created successfully']);
+    
+            Log::info('Textbook processing completed successfully.');
+    
+            return response()->json([
+                'message' => 'Textbook uploaded and processed successfully',
+                'textbook_id' => $textbook->id,
+            ]);
         } catch (\Exception $e) {
-            Log::error('Error uploading textbook: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error("Error uploading and processing textbook: {$e->getMessage()}");
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
-
+    
+    
     public function saveButton(Request $request)
     {
         $validated = $request->validate([

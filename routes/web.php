@@ -95,13 +95,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/api/students', [TeacherController::class, 'getStudents'])->name('api.students');
         Route::post('/api/teacher/adopt-student', [TeacherController::class, 'adoptStudent']);
         Route::get('/api/unassigned-students', [TeacherController::class, 'getUnassignedStudents']);
+        Route::get('/teacher/drawings/{filename}', [TeacherController::class, 'showDrawing'])
+        ->name('teacher.showDrawing');
+
     });
 
     // Admin Routes
     Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
-        Route::post('/admin/upload-textbook', [AdminController::class, 'uploadTextbook'])->name('admin.uploadTextbook');
         Route::post('/admin/save-page', [AdminController::class, 'savePage'])->name('admin.savePage');
+    Route::post('/admin/upload-and-process-textbook', [AdminController::class, 'uploadAndProcessTextbook']);
 
                // Route to show submission drawings
         Route::middleware(['auth', 'role:admin'])->group(function () {

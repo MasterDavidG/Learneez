@@ -1,16 +1,33 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Stage, Layer, Image, Rect, Text, Circle } from 'react-konva';
+import { Stage, Layer, Image, Circle } from 'react-konva';
 import useImage from 'use-image';
 
-const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
+const ResponsiveStage = ({ imageSrc, buttons, onStageClick, selectedTextbook }) => {
     const [image] = useImage(imageSrc);
     const [stageSize, setStageSize] = useState({ width: 800, height: 600 });
     const stageContainerRef = useRef(null);
 
+    // Updated playAudio to rely on props
     const playAudio = (audioPath) => {
-        const audio = new Audio(audioPath); // Use full URL returned from backend
-        audio.play().catch((error) => console.error('Error playing audio:', error));
+        if (!selectedTextbook || !audioPath) {
+            console.error('Audio path or selected textbook is missing.');
+            return;
+        }
+    
+        // Ensure audioPath is just the filename
+        const sanitizedAudioPath = audioPath.replace(/^.*[\\/]/, ''); // Remove any path parts if present
+        const fullAudioPath = `/api/buttons/audio/${selectedTextbook}/${sanitizedAudioPath}`;
+    
+        console.log("Loading audio from:", fullAudioPath);
+    
+        const audio = new Audio(fullAudioPath);
+        audio.play()
+            .then(() => console.log('Playing audio:', fullAudioPath))
+            .catch((error) => console.error('Error playing audio:', error));
     };
+    
+
+    // Handle resizing the stage to match the image's aspect ratio
     useEffect(() => {
         const resizeStage = () => {
             if (stageContainerRef.current && image) {
@@ -39,7 +56,7 @@ const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
                 onClick={onStageClick}
                 style={{ border: '1px solid #ccc', margin: '0 auto' }}
             >
-                
+                {/* Render the background image */}
                 <Layer>
                     {image && (
                         <Image
@@ -48,17 +65,18 @@ const ResponsiveStage = ({ imageSrc, buttons, onStageClick }) => {
                             height={stageSize.height}
                         />
                     )}
-                    
                 </Layer>
+
+                {/* Render buttons with audio functionality */}
                 <Layer>
                     {buttons.map((button, index) => (
                         <Circle
                             key={index}
                             x={button.x}
                             y={button.y}
-                            radius={15} // Visible size for audio button
+                            radius={15}
                             fill="blue"
-                            onClick={() => playAudio(button.audio)}
+                            onClick={() => playAudio(button.audio)} // Use playAudio
                         />
                     ))}
                 </Layer>

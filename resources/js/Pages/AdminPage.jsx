@@ -19,6 +19,7 @@ const AdminPage = ({ auth, pages: initialPages }) => {
     const [pages, setPages] = useState(initialPages || []);
     const [selectedTextbook, setSelectedTextbook] = useState(null);
     const [pageId, setPageId] = useState(null);
+    const [buttons, setButtons] = useState([]);
     const [isPlacing, setIsPlacing] = useState(false);
     const [image] = useImage(
         pageId
@@ -35,23 +36,55 @@ const AdminPage = ({ auth, pages: initialPages }) => {
             .then((response) => setTextbooks(response.data))
             .catch((error) => console.error('Error fetching textbooks:', error));
     }, []);
-
-    const handlePDFUpload = async (e) => {
+    useEffect(() => {
+        if (pageId) {
+            axios.get(`/api/buttons/${pageId}`)
+                .then((response) => {
+                    setButtons(response.data.buttons || []);
+                })
+                .catch((error) => console.error('Error fetching buttons:', error));
+        }
+    }, [pageId]);
+    const handleTextbookUploadAndProcess = async (e) => {
+        e.preventDefault(); // Prevent default form behavior
+    
         const formData = new FormData();
-        formData.append('pdf', e.target.files[0]);
-
+        formData.append('title', e.target.title.value); // Include textbook title
+        formData.append('pdf', e.target.pdf.files[0]); // Include uploaded file
+    
         try {
-            await axios.post('/admin/upload-textbook', formData, {
+            // Send request to the combined endpoint
+            await axios.post('/admin/upload-and-process-textbook', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
-            alert('PDF uploaded and pages created successfully!');
-            window.location.reload();
+    
+            alert('Textbook uploaded and processed successfully!');
+            window.location.reload(); // Refresh to load new textbooks/pages
         } catch (error) {
-            console.error('Error uploading PDF:', error);
-            alert('Failed to upload PDF. Check console for details.');
+            console.error('Error uploading and processing textbook:', error);
+            alert('Failed to upload and process textbook. Check console for details.');
         }
     };
-
+    
+    const playAudio = (audioPath) => {
+        if (!selectedTextbook || !audioPath) {
+            console.error('Audio path or selected textbook is missing.');
+            return;
+        }
+    
+        // Ensure audioPath is just the filename
+        const sanitizedAudioPath = audioPath.replace(/^.*[\\/]/, ''); // Remove any path parts if present
+        const fullAudioPath = `/api/buttons/audio/${selectedTextbook}/${sanitizedAudioPath}`;
+    
+        console.log("Loading audio from:", fullAudioPath);
+    
+        const audio = new Audio(fullAudioPath);
+        audio.play()
+            .then(() => console.log('Playing audio:', fullAudioPath))
+            .catch((error) => console.error('Error playing audio:', error));
+    };
+     
+    
     const handleTextbookChange = (textbookId) => {
         setSelectedTextbook(textbookId);
         setPages([]);
@@ -128,24 +161,15 @@ const AdminPage = ({ auth, pages: initialPages }) => {
         formData.append('audio', data.current_audio, `button_audio_${data.buttons.length}.webm`);
 
         try {
-            await axios.post('/admin/save-button', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-
-            setData({
-                ...data,
-                buttons: [...data.buttons, { x: data.x, y: data.y }],
-                current_audio: null,
-                x: null,
-                y: null,
-            });
+            await axios.post('/admin/save-button', formData);
+            setButtons([...buttons, { x: data.x, y: data.y, audio: URL.createObjectURL(data.current_audio) }]);
+            reset();
             alert('Button saved successfully!');
         } catch (error) {
             console.error('Error saving button:', error);
             alert('Failed to save button. Check console for details.');
         }
     };
-
     const savePage = async () => {
         try {
             await axios.post('/admin/save-page', { page_id: pageId });
@@ -164,9 +188,34 @@ const AdminPage = ({ auth, pages: initialPages }) => {
                 </header>
 
                 <div className="upload-section">
-                    <h2>Upload PDF</h2>
-                    <input type="file" accept="application/pdf" onChange={handlePDFUpload} className="file-input" />
-                </div>
+    <h2>Upload and Process Textbook</h2>
+    <form onSubmit={handleTextbookUploadAndProcess} className="upload-form">
+        <div>
+            <label>Title:</label>
+            <input
+                type="text"
+                name="title"
+                placeholder="Enter textbook title"
+                required
+                className="input-field"
+            />
+        </div>
+        <div>
+            <label>PDF File:</label>
+            <input
+                type="file"
+                name="pdf"
+                accept="application/pdf"
+                required
+                className="file-input"
+            />
+        </div>
+        <button type="submit" className="button upload-button">
+            Upload and Start Processing
+        </button>
+    </form>
+</div>
+
 
                 <div className="selectors">
                     <div className="textbook-selector">
@@ -208,20 +257,13 @@ const AdminPage = ({ auth, pages: initialPages }) => {
     <div className="page-editor-section">
         <h2>Page Editor</h2>
         <ResponsiveStage
-            imageSrc={
-                pageId
-                    ? `/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`
-                    : null
-            }
-            buttons={data.buttons}
-            onStageClick={(e) => {
-                if (!isPlacing) return;
+    imageSrc={`/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`}
+    buttons={buttons} // Pass fetched buttons
+    onPlayAudio={playAudio} // Pass the playAudio function
+    onStageClick={handleStageClick}
+    selectedTextbook={selectedTextbook} // Pass selectedTextbook here
+/>
 
-                const pos = e.target.getStage().getRelativePointerPosition();
-                setData({ ...data, x: pos.x, y: pos.y });
-                setIsPlacing(false);
-            }}
-        />
 
         {/* Audio Player Section */}
         {data.current_audio && (

@@ -33,20 +33,21 @@ class TeacherController extends Controller
     public function viewSubmissions(Request $request)
     {
         $studentId = $request->query('student_id');
-
+    
         // Log the received student ID for debugging
         Log::info("Fetching submissions for student_id: {$studentId}");
-
+    
         if (!$studentId) {
             return redirect()->back()->withErrors(['Student ID is required']);
         }
-
+    
         $submissions = Submission::where('student_id', $studentId)
+            ->where('status', 'submitted') // Filter submissions with status: submitted
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($submission) {
                 $filePath = "drawings/{$submission->drawing}";
-
+    
                 // Construct URL using Laravel's storage facade
                 if (Storage::exists($filePath)) {
                     $submission->drawing_url = Storage::url($filePath);
@@ -54,16 +55,35 @@ class TeacherController extends Controller
                     Log::warning("Drawing not found: {$filePath}");
                     $submission->drawing_url = null;
                 }
-
+    
                 return $submission;
             });
-
+    
         return Inertia::render('TeacherSubmissions', [
             'submissions' => $submissions,
             'studentId' => $studentId,
         ]);
     }
+    
+    public function showDrawing($filename)
+    {
+        try {
+            $filePath = "drawings/{$filename}";
 
+            if (!Storage::exists($filePath)) {
+                Log::warning("Drawing file not found: {$filePath}");
+                abort(404, 'File not found');
+            }
+
+            $file = Storage::get($filePath);
+            $mimeType = Storage::mimeType($filePath) ?? 'image/png';
+
+            return response($file, 200)->header('Content-Type', $mimeType);
+        } catch (\Exception $e) {
+            Log::error("Error fetching drawing: {$e->getMessage()}");
+            return response()->json(['error' => 'Failed to load drawing'], 500);
+        }
+    }
 
     public function getBooks()
     {

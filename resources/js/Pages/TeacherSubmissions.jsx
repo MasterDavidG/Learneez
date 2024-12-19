@@ -12,6 +12,7 @@ const TeacherSubmissions = ({ auth, studentId }) => {
     const [selectedPage, setSelectedPage] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    // Fetch submissions and textbooks on load
     useEffect(() => {
         if (studentId) fetchSubmissions();
         fetchTextbooks();
@@ -34,6 +35,22 @@ const TeacherSubmissions = ({ auth, studentId }) => {
             console.error('Error fetching textbooks:', error);
         }
     };
+
+    // Fetch pages when a textbook is selected
+    useEffect(() => {
+        const fetchPages = async () => {
+            if (selectedTextbook) {
+                try {
+                    const response = await axios.get(`/api/textbooks/${selectedTextbook}/pages`);
+                    setPages(response.data);
+                } catch (error) {
+                    console.error('Error fetching pages:', error);
+                }
+            }
+        };
+
+        fetchPages();
+    }, [selectedTextbook]);
 
     const handleAssignHomework = async () => {
         if (!selectedTextbook || !selectedPage) {
@@ -58,13 +75,17 @@ const TeacherSubmissions = ({ auth, studentId }) => {
 
     return (
         <AuthenticatedLayout auth={auth}>
-            <div className="teacher-container">
+            <div className="teacher-submissions-container">
+                <header>
+                    <h1>Submissions for Student {studentId}</h1>
+                </header>
+
                 {/* Assign Homework Section */}
-                <div className="assign-section">
+                <div className="assignment-section">
                     <h2>Assign Homework</h2>
-                    <div className="dropdown-container">
+                    <div className="dropdowns">
                         <select
-                            onChange={(e) => setSelectedTextbook(e.target.value)}
+                            onChange={(e) => handleTextbookChange(e.target.value)}
                             value={selectedTextbook || ''}
                             className="dropdown"
                         >
@@ -91,18 +112,22 @@ const TeacherSubmissions = ({ auth, studentId }) => {
                             </select>
                         )}
                     </div>
-                    <button onClick={handleAssignHomework} className="assign-btn" disabled={loading}>
-                        {loading ? 'Assigning...' : 'Assign Homework'}
+                    <button
+                        onClick={handleAssignHomework}
+                        className="assign-button"
+                        disabled={loading}
+                    >
+                        {loading ? 'Assigning...' : 'Assign as Homework'}
                     </button>
                 </div>
 
-                {/* Submissions Section */}
+                {/* Scrollable Submissions Section */}
                 <div className="submissions-section">
                     <h2>Student Submissions</h2>
-                    <div className="submissions-scroll">
+                    <div className="scrollable-container">
                         {submissions.length > 0 ? (
                             submissions.map((submission) => (
-                                <div key={submission.id} className="submission-item">
+                                <div key={submission.id} className="submission-stage">
                                     <SubmissionPreviewStage
                                         submissionId={submission.id}
                                         src={`/pages/${submission.textbook_id}/${submission.image}`}
@@ -116,6 +141,7 @@ const TeacherSubmissions = ({ auth, studentId }) => {
                 </div>
             </div>
         </AuthenticatedLayout>
+    
     );
 };
 
