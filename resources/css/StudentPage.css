@@ -127,3 +127,37 @@ button:hover {
   border-color: #004085;
   transform: translateY(-2px); /* Slight lift effect */
 }
+
+
+.audio-button {
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+}
+
+.audio-button:hover {
+  transform: scale(1.1);
+  background-color: #87CEEB; /* Lighter blue on hover */
+}
+.undo-button {
+  color: white;
+  border-radius: 50%;
+  width: 40px; /* Increased size */
+  height: 40px; /* Increased size */
+  font-size: 49px; /* Larger icon size */
+  cursor: pointer;
+  margin-bottom: 170px; /* This will push the button higher */  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.undo-button:hover {
+  background-color: #4682B4; /* Darker blue on hover */
+  transform: scale(1.1); /* Slight zoom effect */
+}
+
+.undo-button:active {
+  background-color: #315f85; /* Even darker blue when clicked */
+  transform: scale(0.95); /* Slight shrink effect on click */
+}
+

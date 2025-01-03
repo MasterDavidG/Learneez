@@ -1,5 +1,6 @@
 <?php
-
+use Illuminate\Support\Facades\{Auth, Route, Storage};
+use Inertia\Inertia;
 use App\Http\Controllers\{
     SubmissionController,
     Auth\AuthenticatedSessionController,
@@ -8,24 +9,20 @@ use App\Http\Controllers\{
     TextbookController,
     PageController,
     AdminController,
-    ButtonController
+    ButtonController,
+    ProfileController
 };
-use Illuminate\Support\Facades\{Auth, Route, Storage};
-use Inertia\Inertia;
 
 require __DIR__ . '/auth.php';
-
-use App\Http\Controllers\ProfileController;
+// Welcome and About Pages
+Route::get('/', fn() => Inertia::render('Welcome'))->name('home');
+Route::get('/about', fn() => Inertia::render('About'));
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-// Welcome and About Pages
-Route::get('/', fn() => Inertia::render('Welcome'))->name('home');
-Route::get('/about', fn() => Inertia::render('About'));
 
 // Route to show submission drawings
 Route::get('/submissions/drawings/{filename}', [TeacherController::class, 'showDrawing'])
@@ -122,17 +119,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/api/buttons/audio/{textbookId}/{fileName}', [ButtonController::class, 'serveAudio'])
         ->name('button.audio');
 });
-
-// Logout Route
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
+// Public API Endpoints
 
 Route::get('/page/{pageId}/buttons', [ButtonController::class, 'fetchPageButtons']);
 Route::get('/api/buttons/{pageId}', [ButtonController::class, 'fetchButtons']);
-
-// Public API Endpoints
 Route::get('/api/textbooks', [TextbookController::class, 'index'])->name('api.textbooks');
 Route::get('/api/textbooks/{textbook}/pages', [PageController::class, 'getPagesForTextbook']);
 Route::get('/api/pages', [PageController::class, 'index']);
 Route::get('/api/student/homework-status', [StudentController::class, 'getHomeworkStatus']);
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->middleware('auth')->name('logout');
 
 require __DIR__ . '/auth.php';
