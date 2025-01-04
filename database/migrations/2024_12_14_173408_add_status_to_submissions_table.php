@@ -8,9 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('submissions', function (Blueprint $table) {
-            $table->enum('status', ['saved', 'submitted'])->default('saved')->after('drawing');
-        });
+
     }
 
     public function down(): void

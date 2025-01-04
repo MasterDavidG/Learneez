@@ -21,6 +21,9 @@ const AdminPage = ({ auth, pages: initialPages }) => {
     const [pageId, setPageId] = useState(null);
     const [buttons, setButtons] = useState([]);
     const [isPlacing, setIsPlacing] = useState(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
     const [image] = useImage(
         pageId
             ? `/pages/${pages.find((p) => p.id === pageId)?.textbook_id}/${pages.find((p) => p.id === pageId)?.image}`
@@ -31,11 +34,33 @@ const AdminPage = ({ auth, pages: initialPages }) => {
     const audioStreamRef = useRef(null);
 
     useEffect(() => {
-        // Fetch all textbooks on load
-        axios.get('/api/textbooks')
-            .then((response) => setTextbooks(response.data))
-            .catch((error) => console.error('Error fetching textbooks:', error));
+        const fetchTextbooks = async () => {
+            try {
+                const response = await axios.get('/api/textbooks');
+                setTextbooks(response.data);
+            } catch (error) {
+                console.error('Error fetching textbooks:', error);
+            }
+        };
+    
+        fetchTextbooks();
     }, []);
+    
+
+    useEffect(() => {
+        if (!pageId) return;
+    
+        const fetchButtons = async () => {
+            try {
+                const response = await axios.get(`/api/buttons/${pageId}`);
+                setButtons(response.data.buttons || []);
+            } catch (error) {
+                console.error('Error fetching buttons:', error);
+            }
+        };
+    
+        fetchButtons();
+    }, [pageId]);
     useEffect(() => {
         if (pageId) {
             axios.get(`/api/buttons/${pageId}`)
@@ -45,15 +70,16 @@ const AdminPage = ({ auth, pages: initialPages }) => {
                 .catch((error) => console.error('Error fetching buttons:', error));
         }
     }, [pageId]);
+
     const handleTextbookUploadAndProcess = async (e) => {
         e.preventDefault(); // Prevent default form behavior
+        setIsProcessing(true); // Start processing indicator
     
         const formData = new FormData();
-        formData.append('title', e.target.title.value); // Include textbook title
-        formData.append('pdf', e.target.pdf.files[0]); // Include uploaded file
+        formData.append('title', e.target.title.value);
+        formData.append('pdf', e.target.pdf.files[0]);
     
         try {
-            // Send request to the combined endpoint
             await axios.post('/admin/upload-and-process-textbook', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
@@ -63,6 +89,8 @@ const AdminPage = ({ auth, pages: initialPages }) => {
         } catch (error) {
             console.error('Error uploading and processing textbook:', error);
             alert('Failed to upload and process textbook. Check console for details.');
+        } finally {
+            setIsProcessing(false); // Stop processing indicator
         }
     };
     
@@ -106,46 +134,59 @@ const AdminPage = ({ auth, pages: initialPages }) => {
 
     const handleStageClick = (e) => {
         if (!isPlacing) return;
-
+    
         const pos = e.target.getStage().getPointerPosition();
-        setData({ ...data, x: pos.x, y: pos.y });
+        const stage = e.target.getStage();
+    
+        if (pos.x >= 0 && pos.x <= stage.width() && pos.y >= 0 && pos.y <= stage.height()) {
+            setData({ ...data, x: pos.x, y: pos.y });
+        } else {
+            alert('Button must be placed within the page boundaries.');
+        }
+    
         setIsPlacing(false);
     };
+    
 
     const startRecording = () => {
+        setIsRecording(true);
         navigator.mediaDevices
             .getUserMedia({ audio: true })
             .then((stream) => {
                 audioStreamRef.current = stream;
                 const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
                 mediaRecorderRef.current = mediaRecorder;
-
+    
                 audioChunks.current = [];
                 mediaRecorder.ondataavailable = (event) => audioChunks.current.push(event.data);
-
+    
                 mediaRecorder.onstop = () => {
                     const audioBlob = new Blob(audioChunks.current, { type: 'audio/webm;codecs=opus' });
                     setData({ ...data, current_audio: audioBlob });
+                    setIsRecording(false); // Stop recording indicator
                 };
-
+    
                 mediaRecorder.start();
             })
             .catch((error) => {
                 console.error('Error accessing microphone:', error);
                 alert('Microphone access denied or unavailable.');
+                setIsRecording(false);
             });
     };
-
+    
     const stopRecording = () => {
         if (mediaRecorderRef.current) {
             mediaRecorderRef.current.stop();
             mediaRecorderRef.current = null;
         }
-
+    
         if (audioStreamRef.current) {
             audioStreamRef.current.getTracks().forEach((track) => track.stop());
             audioStreamRef.current = null;
         }
+    
+        setIsRecording(false);
     };
 
     const saveButton = async () => {
@@ -237,18 +278,22 @@ const AdminPage = ({ auth, pages: initialPages }) => {
                     {selectedTextbook && (
                         <div className="page-selector-section">
                             <h2>Select Page</h2>
-                            <select
-                                onChange={handlePageSelection}
-                                value={pageId || ''}
-                                className="dropdown"
-                            >
-                                <option value="">Choose a page...</option>
-                                {pages.map((page) => (
-                                    <option key={page.id} value={page.id}>
-                                        Page {page.page_number}
-                                    </option>
-                                ))}
-                            </select>
+                            {isLoading ? (
+    <p>Loading pages...</p>
+) : (
+    <select
+        onChange={handlePageSelection}
+        value={pageId || ''}
+        className="dropdown"
+    >
+        <option value="">Choose a page...</option>
+        {pages.map((page) => (
+            <option key={page.id} value={page.id}>
+                Page {page.page_number}
+            </option>
+        ))}
+    </select>
+)}
                         </div>
                     )}
                 </div>
@@ -280,21 +325,24 @@ const AdminPage = ({ auth, pages: initialPages }) => {
             {isPlacing && <p>Click on the page to place the button.</p>}
 
             {data.x && data.y && (
-                <>
-                    <p>
-                        Button placed at ({data.x.toFixed(0)}, {data.y.toFixed(0)})
-                    </p>
-                    <button className="button start-recording" onClick={startRecording}>
-                        Start Recording
-                    </button>
-                    <button className="button stop-recording" onClick={stopRecording}>
-                        Stop Recording
-                    </button>
-                    <button className="button save-button" onClick={saveButton}>
-                        Save Button
-                    </button>
-                </>
-            )}
+    <>
+        <p>Button placed at ({data.x.toFixed(0)}, {data.y.toFixed(0)})</p>
+        {isRecording ? (
+            <p className="recording-indicator">Recording...</p>
+        ) : (
+            <button className="button start-recording" onClick={startRecording}>
+                Start Recording
+            </button>
+        )}
+        <button className="button stop-recording" onClick={stopRecording}>
+            Stop Recording
+        </button>
+        <button className="button save-button" onClick={saveButton}>
+            Save Button
+        </button>
+    </>
+)}
+
             <button className="button save-page" onClick={savePage}>
                 Finalize Page
             </button>
