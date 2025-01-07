@@ -1,56 +1,6 @@
-.student-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #f9f9f9;
-  font-family: 'Arial', sans-serif;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  position: relative;
-  background-image: url("/woodBG.jpg");
-  background-repeat: no-repeat;
-  background-size: cover;
-}
 
-h1 {
-  color: #333;
-  margin-bottom: 20px;
-}
-
-.top-controls {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 20px;
-  color: #ffffff;
-  transition: color 0.3s;
-}
-
-button:hover {
-  color: #0056b3;
-}
-
-.vertical-slider {
-  writing-mode: bt-lr;
-  transform: rotate(-90deg);
-  top: 10px;
-  margin: 10px 0;
-}
-
-.drawing-canvas {
-  border: 2px solid #000000;
-  border-radius: 10px;
-  overflow: hidden;
-  background-color: #1d1d1d;
-}
 .side-controls {
+
   position: fixed;
   right: 20px;
   top: 50%;
@@ -58,15 +8,6 @@ button:hover {
   display: flex;
   flex-direction: column;
   gap: 15px;
-}
-
-.side-controls-slider {
-  position: fixed;
-  right: -56px;
-  top: 70%; /* Slider placed lower */
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
 }
 .icon-button{
   display:flex;
@@ -102,62 +43,380 @@ button:hover {
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* Save Button Style */
-.save-button {
-  background-color: #28a745; /* Bright Green */
-  color: white;
-  border-color: #218838; /* Slightly darker green border */
+.side-controls-slider {
+  position: fixed;
+  right: -56px;
+  top: 70%; /* Slider placed lower */
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+}
+/* Top Controls Styling */
+.top-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
-.save-button:hover {
-  background-color: #218838; /* Darker green on hover */
-  border-color: #1e7e34;
-  transform: translateY(-2px); /* Slight lift effect */
+.top-controls .icon-button {
+    width: 50px;
+    height: 50px;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* Submit Button Style */
+.top-controls .icon-button:hover {
+    background-color: #e0e0e0;
+    transform: scale(1.1);
+}
+
+.top-controls .icon-button svg {
+    font-size: 24px;
+    color: #5a5a5a;
+}
+
+/* Make it responsive */
+@media (max-width: 768px) {
+    .top-controls {
+        flex-direction: row;
+        gap: 10px;
+        justify-content: space-evenly;
+    }
+
+    .top-controls .icon-button {
+        width: 45px;
+        height: 45px;
+    }
+}
+/* Student Page Styling */
+.student-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fdf6e3;
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  background-image: url("/woodBG.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* Page Number Styling */
+h1 {
+  background-color: #ffdd57;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Top Controls Styling */
+.top-controls {
+  display: flex;
+  gap: 15px;
+  background-color: #fff4e6;
+  padding: 10px 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.top-controls .icon-button {
+  width: 55px;
+  height: 55px;
+  background-color: #ffe0b2;
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.top-controls .icon-button:hover {
+  background-color: #ffd180;
+  transform: scale(1.1);
+}
+
+.top-controls .icon-button svg {
+  font-size: 28px;
+  color: #5a5a5a;
+}
+
+/* Save and Submit Buttons */
+.drawing-buttons-container {
+  display: flex;
+  justify-content: flex-start;
+  gap: 15px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.special-button {
+  font-family: 'Comic Sans MS', 'Arial', sans-serif;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 12px 25px;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
 .submit-button {
-  background-color: #007bff; /* Bright Blue */
+  background-color: #42a5f5;
   color: white;
-  border-color: #0056b3; /* Slightly darker blue border */
 }
 
 .submit-button:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-  border-color: #004085;
-  transform: translateY(-2px); /* Slight lift effect */
+  background-color: #1e88e5;
+  transform: translateY(-3px);
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .top-controls {
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-evenly;
+  }
 
-.audio-button {
-  cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.3s ease;
+  .top-controls .icon-button {
+    width: 45px;
+    height: 45px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .undo-button {
+    width: 40px;
+    height: 40px;
+  }
+}
+.drawing-buttons-container.centered-buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+}
+/* Centered Circular Buttons for Save and Submit */
+.drawing-buttons-container.centered-buttons {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
 }
 
-.audio-button:hover {
-  transform: scale(1.1);
-  background-color: #87CEEB; /* Lighter blue on hover */
-}
-.undo-button {
-  color: white;
+.icon-button {
+  width: 60px;
+  height: 60px;
+  background-color: #24c5ff; /* Green for save button */
+  border: none;
   border-radius: 50%;
-  width: 40px; /* Increased size */
-  height: 40px; /* Increased size */
-  font-size: 49px; /* Larger icon size */
-  cursor: pointer;
-  margin-bottom: 170px; /* This will push the button higher */  display: flex;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.icon-button:hover {
+  background-color: #5cab52; /* Darker green on hover */
+  transform: scale(1.1);
+}
+
+.icon-button:active {
+  background-color: #4b9344; /* Even darker green when clicked */
+  transform: scale(0.95);
+}
+
+/* Special Styling for Submit Button */
+.submit-button {
+  background-color: #42a5f5; /* Blue for submit button */
+}
+
+.submit-button:hover {
+  background-color: #1e88e5; /* Darker blue on hover */
+}
+
+.submit-button:active {
+  background-color: #1565c0; /* Even darker blue when clicked */
+}
+
+/* Save & Submit Icons */
+.icon-button svg {
+  font-size: 28px;
+  color: white;
+}
+
+/* Undo Button Styling */
+.undo-button {
+  margin-bottom: 240px; /* This will push the button higher */  display: flex;
+
+  color: white;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 36px;
+  background-color: #7a4cf0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
 .undo-button:hover {
-  background-color: #4682B4; /* Darker blue on hover */
-  transform: scale(1.1); /* Slight zoom effect */
+  background-color: #f4511e;
+  transform: scale(1.1);
 }
 
 .undo-button:active {
-  background-color: #315f85; /* Even darker blue when clicked */
-  transform: scale(0.95); /* Slight shrink effect on click */
+  background-color: #bf360c;
+  transform: scale(0.95);
+}
+/* Circular Save Button Styling */
+.icon-button.save-button {
+  width: 70px;
+  height: 70px;
+  background-color: #6ecb63; /* Green color for the save button */
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
+.icon-button.save-button:hover {
+  background-color: #5cab52; /* Darker green on hover */
+  transform: scale(1.1);
+}
+
+.icon-button.save-button:active {
+  background-color: #4b9344; /* Even darker green when clicked */
+  transform: scale(0.95);
+}
+
+/* Save Icon Inside the Button */
+.icon-button.save-button svg {
+  font-size: 32px;
+  color: white;
+}
+/* Side Controls Container */
+.side-controls {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Vertical Slider Styling - Simple and Blue */
+.vertical-slider {
+  margin-right: 30px;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 150px;
+  height: 12px;
+  background-color: #bbdefb; /* Light blue track */
+  border-radius: 10px;
+  outline: none;
+  cursor: pointer;
+  transform: rotate(-90deg);
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Slider Thumb Styling */
+.vertical-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  background-color: #2196f3; /* Blue thumb */
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.vertical-slider::-moz-range-thumb {
+  width: 30px;
+  height: 30px;
+  background-color: #2196f3; /* Blue thumb */
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+/* Slider Thumb Hover and Active Effects */
+.vertical-slider:hover::-webkit-slider-thumb {
+  background-color: #1e88e5;
+}
+
+.vertical-slider:active::-webkit-slider-thumb {
+  background-color: #1565c0;
+}
+/* Page Number Styling */
+.page-number {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #ffdd57;
+  color: #333;
+  padding: 8px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-size: 24px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 20px;
+  left: 20px;
+}
+
+/* Icon Styling */
+.page-number-icon {
+  font-size: 28px;
+  color: #333;
+}

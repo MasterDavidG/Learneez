@@ -64,20 +64,23 @@ class TeacherController extends Controller
         ]);
     }
 
-    public function showDrawing($filename)
+    public function showDrawing($page_id)
     {
         try {
+            $submission = Submission::where('page_id', $page_id)->first();
+            if (!$submission)
+                return response([], 200);
+            $filename = $submission->drawing;
             $filePath = "drawings/{$filename}";
             if (!Storage::exists($filePath)) {
-                Log::warning("Drawing file not found: {$filePath}");
-                abort(404, 'File not found');
+                return response([], 200);
             }
             $file = Storage::get($filePath);
-            $mimeType = Storage::mimeType($filePath) ?? 'image/png';
+            $mimeType = Storage::mimeType($filePath) ?? 'application/json';
             return response($file, 200)->header('Content-Type', $mimeType);
         } catch (\Exception $e) {
             Log::error("Error fetching drawing: {$e->getMessage()}");
-            return response()->json(['error' => 'Failed to load drawing'], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

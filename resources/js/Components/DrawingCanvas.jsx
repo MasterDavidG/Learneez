@@ -1,22 +1,35 @@
-import { useState, useEffect, useRef } from 'react';
-import { Stage, Layer, Line, Image, Rect, Text, Group } from 'react-konva';
-import axios from 'axios';
-
-const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, onSubmitDrawing, canvasSize, onUndo }) => {
+import { useState, useEffect, useRef } from "react";
+import { Stage, Layer, Line, Image, Rect, Text, Group } from "react-konva";
+import axios from "axios";
+import { FaSave, FaPaperPlane } from "react-icons/fa"; // Icons from react-icons
+const DrawingCanvas = ({
+    currentPage,
+    buttons,
+    tool,
+    penSize,
+    onSaveDrawing,
+    onSubmitDrawing,
+    canvasSize,
+    onUndo,
+    pageId,
+}) => {
     const [lines, setLines] = useState([]);
     const [hoveredButton, setHoveredButton] = useState(null);
     const isDrawing = useRef(false);
     const canvasRef = useRef(null);
 
+    // Load saved drawing from the server
     useEffect(() => {
         const fetchSavedDrawing = async () => {
             try {
-                const response = await axios.get(`/submissions/drawings/${currentPage.id}.json`);
+                const response = await axios.get(
+                    `/submissions/drawings/${pageId}`
+                );
                 if (response.data) {
-                    setLines(JSON.parse(response.data));
+                    setLines(response.data);
                 }
             } catch (error) {
-                console.error('Error fetching saved drawing:', error);
+                console.error("Error fetching saved drawing:", error);
             }
         };
 
@@ -25,63 +38,89 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, onS
         }
     }, [currentPage]);
 
-    // Stop drawing if mouse is released anywhere on the window
+    // Stop drawing if pointer is released anywhere on the window
     useEffect(() => {
-        const handleMouseUpWindow = () => {
+        const handlePointerUpWindow = () => {
             isDrawing.current = false;
         };
-        window.addEventListener('mouseup', handleMouseUpWindow);
+        window.addEventListener("pointerup", handlePointerUpWindow);
 
         return () => {
-            window.removeEventListener('mouseup', handleMouseUpWindow);
+            window.removeEventListener("pointerup", handlePointerUpWindow);
         };
     }, []);
 
-    // Drawing handlers
-    const handleMouseDown = (e) => {
-        if (e.target.className === 'audio-button') return;
+    // Drawing handlers with pointer capture
+    const handlePointerDown = (e) => {
+        if (e.evt.button !== undefined && e.evt.button !== 0) return; // Only allow left mouse button
+        if (e.target.className === "audio-button") return;
+
+        e.target.setPointerCapture(e.pointerId);
         isDrawing.current = true;
+
         const pos = e.target.getStage().getPointerPosition();
-        setLines([...lines, { tool, points: [pos.x, pos.y], width: tool === 'eraser' ? penSize * 2 : penSize }]);
+        const lineWidth = tool === "eraser" ? penSize * 2 : penSize;
+
+        setLines((prevLines) => [
+            ...prevLines,
+            { tool, points: [pos.x, pos.y], width: lineWidth },
+        ]);
     };
 
-    const handleMouseMove = (e) => {
+    const handlePointerMove = (e) => {
         if (!isDrawing.current) return;
+
         const stage = e.target.getStage();
         const point = stage.getPointerPosition();
-        const lastLine = lines[lines.length - 1];
-        lastLine.points = lastLine.points.concat([point.x, point.y]);
-        lines.splice(lines.length - 1, 1, lastLine);
-        setLines([...lines]);
+
+        setLines((prevLines) => {
+            const lastLine = prevLines[prevLines.length - 1];
+            if (!lastLine) return prevLines;
+
+            const newPoints = lastLine.points.concat([point.x, point.y]);
+            const updatedLines = [...prevLines];
+            updatedLines[updatedLines.length - 1] = {
+                ...lastLine,
+                points: newPoints,
+            };
+
+            return updatedLines;
+        });
     };
 
-    const handleMouseUp = () => {
+    const handlePointerUp = (e) => {
+        isDrawing.current = false;
+        e.target.releasePointerCapture(e.pointerId);
+    };
+
+    const handlePointerLeave = () => {
         isDrawing.current = false;
     };
 
-    // Stop drawing if the mouse leaves the canvas
-    const handleMouseLeave = () => {
-        isDrawing.current = false;
-    };
-
+    // Undo the last drawn line
     const undoLastLine = () => {
-        setLines(lines.slice(0, -1));
+        setLines((prevLines) => prevLines.slice(0, -1));
         if (onUndo) onUndo();
     };
 
+    // Save drawing
     const saveDrawing = () => {
         const drawingJSON = JSON.stringify(lines);
         onSaveDrawing(drawingJSON);
     };
 
+    // Submit drawing
     const submitDrawing = () => {
         const drawingJSON = JSON.stringify(lines);
         onSubmitDrawing(drawingJSON);
     };
 
+    // Play audio
     const playAudio = (audioPath) => {
         const audio = new Audio(audioPath);
-        audio.play().catch((error) => console.error('Error playing audio:', error));
+        audio
+            .play()
+            .catch((error) => console.error("Error playing audio:", error));
     };
 
     return (
@@ -90,14 +129,12 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, onS
                 ref={canvasRef}
                 width={canvasSize.width}
                 height={canvasSize.height}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerLeave={handlePointerLeave}
             >
-                <Layer>
-                    {currentPage && <Image image={currentPage} />}
-                </Layer>
+                <Layer>{currentPage && <Image image={currentPage} />}</Layer>
                 <Layer>
                     {buttons.map((button, index) => (
                         <Group
@@ -111,7 +148,11 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, onS
                                 y={button.y - 15}
                                 width={40}
                                 height={40}
-                                fill={hoveredButton === index ? '#64B5F6' : '#5DADE2'}
+                                fill={
+                                    hoveredButton === index
+                                        ? "#64B5F6"
+                                        : "#5DADE2"
+                                }
                                 stroke="#4682B4"
                                 strokeWidth={3}
                                 cornerRadius={12}
@@ -134,29 +175,46 @@ const DrawingCanvas = ({ currentPage, buttons, tool, penSize, onSaveDrawing, onS
                         <Line
                             key={index}
                             points={line.points}
-                            stroke={line.tool === 'pen' ? 'black' : 'white'}
-                            strokeWidth={line.tool === 'pen' ? line.width : line.width * 1.5} // Make eraser wider
+                            stroke={line.tool === "pen" ? "black" : "white"}
+                            strokeWidth={line.width}
                             tension={0.5}
                             lineCap="round"
                             lineJoin="round"
-                            globalCompositeOperation={line.tool === 'pen' ? 'source-over' : 'destination-out'}
+                            globalCompositeOperation={
+                                line.tool === "pen"
+                                    ? "source-over"
+                                    : "destination-out"
+                            }
                         />
                     ))}
                 </Layer>
             </Stage>
-            <div className="drawing-buttons-container">
-                <button type="button" onClick={saveDrawing} className="special-button save-button">
-                    Save
-                </button>
+            <div className="drawing-buttons-container centered-buttons">
+                    <button
+                        type="button"
+                        onClick={saveDrawing}
+                        className="icon-button save-button"
+                    >
+                        <FaSave size={32} />
+                    </button>
+
                 {onSubmitDrawing && (
-                    <button type="button" onClick={submitDrawing} className="special-button submit-button">
-                        Submit
+                    <button
+                        type="button"
+                        onClick={submitDrawing}
+                        className="icon-button"
+                    >
+                        <FaPaperPlane size={24} />
                     </button>
                 )}
             </div>
             <div className="side-controls">
-                <button type="button" onClick={undoLastLine} className="undo-button">
-                    ↻
+                <button
+                    type="button"
+                    onClick={undoLastLine}
+                    className="undo-button"
+                >
+                    ↶
                 </button>
             </div>
         </div>

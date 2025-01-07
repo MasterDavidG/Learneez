@@ -98,9 +98,9 @@ Route::middleware('auth')->group(function () {
             ->name('teacher.showDrawing');
     });
 
-        Route::get('/api/submissions', [SubmissionController::class, 'getSubmissions'])->name('api.submissions');
-        Route::get('/teacher/submissions', [SubmissionController::class, 'viewSubmissions'])->name('teacher.submissions');
-
+    Route::get('/teacher/submissions', [SubmissionController::class, 'viewSubmissions'])->name('teacher.submissions');
+    
+    Route::get('/api/submissions', [SubmissionController::class, 'getSubmissions'])->name('api.submissions');
     Route::get('/api/submission/{submissionId}', [SubmissionController::class, 'getSubmissionJSON'])->name('api.submissionJSON');
 
     // Admin Routes

@@ -4,7 +4,7 @@ import axios from 'axios';
 import DrawingCanvas from '../Components/DrawingCanvas';
 import { FaPen, FaEraser } from 'react-icons/fa';
 import '../../css/StudentPage.css';
-
+import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaHome } from 'react-icons/fa';
 const StudentPage = ({ page }) => {
     const [tool, setTool] = useState('pen');
     const [penSize, setPenSize] = useState(3);
@@ -90,15 +90,25 @@ const StudentPage = ({ page }) => {
 
     return (
         <div className="student-page">
-            <h1>Page {currentPage.page_number}</h1>
+           <div className="page-number">
+  <span className="page-number-icon">📖</span>
+  {currentPage.page_number}
+</div>
             <div className="top-controls">
-                <button className="button prev" onClick={() => handlePageChange('prev')}>Previous</button>
-                <button className="button next" onClick={() => handlePageChange('next')}>Next</button>
-                <button className="button done" onClick={handleMarkAsDone}>Mark as Done</button>
-                <button className="back-button" onClick={() => (window.location.href = '/student')}>
-                    Back to Dashboard
-                </button>
-            </div>
+    <button className="icon-button" onClick={() => handlePageChange('prev')}>
+        <FaArrowLeft />
+    </button>
+    <button className="icon-button" onClick={() => handlePageChange('next')}>
+        <FaArrowRight />
+    </button>
+    <button className="icon-button" onClick={handleMarkAsDone}>
+        <FaCheckCircle />
+    </button>
+    <button className="icon-button" onClick={() => (window.location.href = '/student')}>
+        <FaHome />
+    </button>
+</div>
+
             <DrawingCanvas
                 currentPage={currentPageImage}
                 buttons={buttons}
@@ -107,6 +117,7 @@ const StudentPage = ({ page }) => {
                 onSaveDrawing={handleSaveDrawing}
                 onSubmitDrawing={isSaved ? handleSubmitDrawing : null}
                 canvasSize={canvasSize}
+                pageId={currentPage.id}
             />
             <div className="side-controls">
                 <button onClick={() => setTool('pen')} className="icon-button"><FaPen /></button>
