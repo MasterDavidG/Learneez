@@ -21,19 +21,18 @@ const Welcome = () => {
   <section className="hero-section">
             <img src={learneezHero} alt="Empowering Learning" className="hero-image" />
             <div className="hero-content">
-                <h2>Empowering <strong>Learning</strong> for Every <strong>Student</strong></h2>
-                <p>Interactive tools designed to enhance personalized learning experiences for students of all abilities.</p>
-                <a href="/register" className="cta-button">Begin Your Journey</a>
+                <h2> <strong>Решавай</strong> Задачите си <strong>Самостоятелно</strong></h2>
+                <p> Решението за вас</p>
+                <a href="/register" className="cta-button">Започнете Обучението си</a>
             </div>
         </section>
 
             <main className="main-content">
                 <section className="about-section">
-                    <h2>About Our App</h2>
+                    <h2>За Нас</h2>
                     <p>
-                        At <strong>Learneez</strong>, we aim to provide <strong>accessible</strong> and <strong>engaging</strong> tools for students with special needs. 
-                        Our platform is designed to make education both <strong>fun</strong> and <strong>effective</strong>.
-                    </p>
+                    Организацията подпомага ученици с дислексия интерактивно да решават своите домашни работи със специялно разработени инструменти.
+                     </p>
                 </section>
 
                 <section className="features">

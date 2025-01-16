@@ -55,18 +55,18 @@ const TeacherDashboard = ({ auth }) => {
             <div className="teacher-dashboard">
                 <header className="dashboard-header">
                     <button onClick={handleLogout} className="logout-button">Logout</button>
-                    <h1>Welcome to the Teacher Dashboard</h1>
+                    <h1>Учителски Панел</h1>
                 </header>
 
                 <div className="student-selection-container">
-                    <h2>Adopt a Student</h2>
+                    <h2>Приемете нов Ученик</h2>
                     <div className="adopt-section">
                         <select
                             onChange={(e) => setSelectedStudent(e.target.value)}
                             value={selectedStudent}
                             className="student-select"
                         >
-                            <option value="">Select a student...</option>
+                            <option value="">Изберете ученик...</option>
                             {unassignedStudents.map(student => (
                                 <option key={student.id} value={student.id}>
                                     {student.name}
@@ -74,13 +74,13 @@ const TeacherDashboard = ({ auth }) => {
                             ))}
                         </select>
                         <button onClick={handleAdoptStudent} className="adopt-button">
-                            Adopt Student
+                            Приеми
                         </button>
                     </div>
                 </div>
 
                 <div className="assigned-students-container">
-                    <h2>Assigned Students</h2>
+                    <h2>Ученици на които сте учител</h2>
                     {students.length > 0 ? (
                         <ul className="student-list">
                             {students.map(student => (

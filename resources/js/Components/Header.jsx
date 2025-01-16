@@ -10,17 +10,17 @@ const Header = () => {
 
     return (
         <header className="header">
-            <h1>Learneez</h1>
+            <h1>Учи Лесно</h1>
             <nav className={`navbar ${isNavVisible ? 'visible' : ''}`}>
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/features">Features</a></li>
-                    <li><a href="/about">About</a></li>
-                    <li><a href="/contact">Contact</a></li>
+                    <li><a href="/">Начало</a></li>
+                    <li><a href="/features">Продукт</a></li>
+                    <li><a href="/about">За нас</a></li>
+                    <li><a href="/contact">Контакти</a></li>
                 </ul>
                 <div className="auth-buttons">
-                    <a href="/login" className="login-button">Login</a>
-                    <a href="/register" className="register-button">Register</a>
+                    <a href="/login" className="login-button">Вход</a>
+                    <a href="/register" className="register-button">Регистрация</a>
                 </div>
             </nav>
             <button className="nav-toggle-button" onClick={toggleNav}>

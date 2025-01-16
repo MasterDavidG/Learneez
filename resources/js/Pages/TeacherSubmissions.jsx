@@ -75,14 +75,14 @@ const TeacherSubmissions = ({ auth, studentId }) => {
             <div className="teacher-container">
                 {/* Assign Homework Section */}
                 <div className="assign-section">
-                    <h2>Assign Homework</h2>
+                    <h2>Задай Страница за Домашно</h2>
                     <div className="dropdown-container">
                         <select
                             onChange={(e) => setSelectedTextbook(e.target.value)}
                             value={selectedTextbook || ''}
                             className="dropdown"
                         >
-                            <option value="">Select a textbook...</option>
+                            <option value="">Изберете Учебник...</option>
                             {textbooks.map((textbook) => (
                                 <option key={textbook.id} value={textbook.id}>
                                     {textbook.title}
@@ -96,23 +96,23 @@ const TeacherSubmissions = ({ auth, studentId }) => {
                                 value={selectedPage || ''}
                                 className="dropdown"
                             >
-                                <option value="">Select a page...</option>
+                                <option value="">Изберете Страница...</option>
                                 {pages.map((page) => (
                                     <option key={page.id} value={page.id}>
-                                        {page.title || `Page ${page.page_number}`}
+                                        {page.title || `Страница ${page.page_number}`}
                                     </option>
                                 ))}
                             </select>
                         )}
                     </div>
                     <button onClick={handleAssignHomework} className="assign-btn" disabled={loading}>
-                        {loading ? 'Assigning...' : 'Assign Homework'}
+                        {loading ? 'Assigning...' : 'Създай задание'}
                     </button>
                 </div>
 
                 {/* Submissions Section */}
                 <div className="submissions-section">
-                    <h2>Student Submissions</h2>
+                    <h2>Предадени Решения от Ученника</h2>
                     <div className="submissions-scroll">
                         {submissions.length > 0 ? (
                             submissions.map((submission) => (

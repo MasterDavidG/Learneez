@@ -420,3 +420,35 @@ h1 {
   font-size: 28px;
   color: #333;
 }
+.save-message {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #64b5f6;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+  }
+  10% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+  }
+  90% {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+  }
+  100% {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+  }
+}

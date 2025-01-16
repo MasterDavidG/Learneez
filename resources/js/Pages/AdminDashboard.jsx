@@ -10,7 +10,7 @@ const AdminDashboard = () => {
 
   return (
     <div>
-      <h1>Hello, Admin</h1>
+      <h1>Здравей, Админ</h1>
       <p>Manage users below:</p>
       <ul>
         {users.map(user => (

@@ -1,5 +1,5 @@
 // Import your main CSS
-import '../css/app.css'; // Ensure this path is correct
+import '../css/app.css'; // This file should include @font-face for Adys and other global styles
 import './bootstrap'; // Bootstrap any necessary JavaScript
 
 // Import Inertia helpers
@@ -15,8 +15,8 @@ createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
         resolvePageComponent(
-            `./Pages/${name}.jsx`, // Make sure your pages are under the Pages directory
-            import.meta.glob('./Pages/**/*.jsx'), // Load all .jsx files in the Pages directory
+            `./Pages/${name}.jsx`,
+            import.meta.glob('./Pages/**/*.jsx'),
         ),
     setup({ el, App, props }) {
         const root = createRoot(el); // Create a root for React

@@ -125,7 +125,7 @@ const StudentDashboard = ({ auth }) => {
             <div className="student-dashboard">
                 <header className="dashboard-header">
                     <div className="header-content">
-                        <h1>Welcome, {profile.name || "Student"}!</h1>
+                        <h1>Здравей {profile.name || "Student"}!</h1>
                         {/* Dropdown to assign a textbook */}
                         <div className="assign-textbook-container">
                             <select
@@ -135,7 +135,7 @@ const StudentDashboard = ({ auth }) => {
                                 }
                                 className="dropdown assign-textbook-dropdown"
                             >
-                                <option value="">Select a Textbook</option>
+                                <option value="">Избери нов Учебник</option>
                                 {textbooks.map((textbook) => (
                                     <option
                                         key={textbook.id}
@@ -149,27 +149,21 @@ const StudentDashboard = ({ auth }) => {
                                 onClick={handleAssignTextbook}
                                 className="button assign-textbook-button"
                             >
-                                Assign Textbook
+                                Запази учебник
                             </button>
                         </div>
                         <button
                             onClick={handleRemoveTeacher}
                             className="button remove-teacher"
                         >
-                            Remove Teacher
+                            Премахни Учител
                         </button>
-                        <Link
-                            href="/student/submissions"
-                            className="button view-submissions"
-                        >
-                            View Submissions
-                        </Link>
                     </div>
                 </header>
 
                 {/* Textbook Selection */}
                 <section className="textbook-section">
-                    <h2>Choose a Textbook</h2>
+                    <h2>Избери Учебник</h2>
                     <div className="books-container">
                         {userTextbooks.map((userTextbook) => (
                             <div
@@ -188,10 +182,11 @@ const StudentDashboard = ({ auth }) => {
                         ))}
                     </div>
                 </section>
+                
                 {/* Pages Grid */}
                 {selectedTextbook && (
                     <section ref={pagesSectionRef} className="pages-grid">
-                        <h2>Pages</h2>
+                        <h2>Страница</h2>
                         <div className="grid-container">
                             {pages.map((page) => (
                                 <div

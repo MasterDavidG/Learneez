@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    overflow-x: hidden;
+}
+
+/* Regular */
+@font-face {
+    font-family: 'Adys';
+    src: url('/WOFF/ADYS-Regular.woff2') format('woff2'),
+         url('/WOFF/ADYS-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Bold */
+@font-face {
+    font-family: 'Adys';
+    src: url('/WOFF/ADYS-Bold.woff2') format('woff2'),
+         url('/WOFF/ADYS-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* Italic */
+@font-face {
+    font-family: 'Adys';
+    src: url('/WOFF/ADYS-Italic.woff2') format('woff2'),
+         url('/WOFF/ADYS-Italic.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+}
+
+/* Medium */
+@font-face {
+    font-family: 'Adys';
+    src: url('/WOFF/ADYS-Medium.woff2') format('woff2'),
+         url('/WOFF/ADYS-Medium.woff') format('woff');
+    font-weight: 500; /* Medium font weight */
+    font-style: normal;
+}
+
+body {
+    font-family: 'Adys', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #f0f8ff, #dbeafe);
+    color: #333;
+}

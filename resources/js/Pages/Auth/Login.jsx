@@ -5,6 +5,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
+import Footer from '@/Components/Footer';
 import "../../../css/login.css"
 export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -25,12 +26,12 @@ export default function Login({ status, canResetPassword }) {
         <GuestLayout>
             <Head title="Log in" />
 
-            <div className="login-container">
-                <h1 className="login-header">Welcome Back</h1>
+            <div className="">
+                <h1 className="login-header">Добре дошли</h1>
 
                 <div className="back-link">
                         <Link href="/" className="text-link">
-                            Back to Main Page
+                            върни се в началото
                         </Link>
                     </div>
                 {status && (
@@ -58,7 +59,7 @@ export default function Login({ status, canResetPassword }) {
                     </div>
 
                     <div className="form-group">
-                        <InputLabel htmlFor="password" value="Password" />
+                        <InputLabel htmlFor="password" value="Парола" />
 
                         <TextInput
                             id="password"
@@ -83,7 +84,7 @@ export default function Login({ status, canResetPassword }) {
                                 }
                             />
                             <span className="ms-2 text-sm text-gray-600">
-                                Remember me
+                                Запомни ме
                             </span>
                         </label>
                     </div>
@@ -94,17 +95,18 @@ export default function Login({ status, canResetPassword }) {
                                 href={route('password.request')}
                                 className="forgot-password-link"
                             >
-                                Forgot your password?
+                                Забравена парола?
                             </Link>
                         )}
 
                         <PrimaryButton className="login-button" disabled={processing}>
-                            Log in
+                            Вход
                         </PrimaryButton>
                     </div>
 
                 </form>
             </div>
+            
         </GuestLayout>
     );
 }
