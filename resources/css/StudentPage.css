@@ -452,3 +452,42 @@ h1 {
       transform: translateX(-50%) translateY(20px);
   }
 }
+.zoom-controls {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #f7f7f7;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1000;
+}
+
+.zoom-button {
+  background: #89cff0; /* Soft blue for buttons */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.zoom-button:hover {
+  background: #5bb7ea; /* Slightly darker blue on hover */
+}
+
+.zoom-level {
+  font-size: 16px;
+  color: #333;
+}

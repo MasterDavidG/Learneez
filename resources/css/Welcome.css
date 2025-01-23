@@ -124,7 +124,7 @@ body {
 }
 
 /* Responsive Styles for Small Screens */
-@media (max-width: 768px) {
+@media (max-width: 1268px) {
     .navbar {
         display: none; /* Hidden by default on small screens */
         flex-direction: column;
@@ -465,7 +465,7 @@ body {
     color: white;
     text-align: center;
     padding: 20px;
-    margin-top: 20px;
+    margin-top: 0px;
     font-size: 1em;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }

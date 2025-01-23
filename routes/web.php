@@ -17,6 +17,8 @@ require __DIR__ . '/auth.php';
 // Welcome and About Pages
 Route::get('/', fn() => Inertia::render('Welcome'))->name('home');
 Route::get('/about', fn() => Inertia::render('About'));
+Route::get('/contact', fn() => Inertia::render('Contact'));
+Route::get('/product', fn() => Inertia::render('Product'));
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,7 +45,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pages/{textbookId}/{filename}', [PageController::class, 'showPage'])->name('showPage');
 
-    Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::middleware(['auth','verified', 'role:student'])->group(function () {
         Route::get('/student', fn() => Inertia::render('StudentDashboard'))->name('student.dashboard');
         Route::middleware(['auth', 'role:student'])->get('/api/student/profile', [StudentController::class, 'getProfile'])->name('student.profile');
         Route::get('/api/user/textbooks', [TextbookController::class, 'userTextbooks'])->name('api.user.textbooks');
@@ -85,7 +87,7 @@ Route::middleware('auth')->group(function () {
         ->middleware(['auth', 'role:student']);
 
     // Teacher Routes
-    Route::middleware(['auth', 'role:teacher'])->group(function () {
+    Route::middleware(['auth','verified', 'role:teacher'])->group(function () {
         Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.dashboard');
         Route::get('/teacher/books', [TeacherController::class, 'getBooks'])->name('teacher.books');
         Route::get('/teacher/books/{book}/pages', [TeacherController::class, 'getPagesForBook'])->name('teacher.book.pages');
@@ -94,8 +96,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/api/students', [TeacherController::class, 'getStudents'])->name('api.students');
         Route::post('/api/teacher/adopt-student', [TeacherController::class, 'adoptStudent']);
         Route::get('/api/unassigned-students', [TeacherController::class, 'getUnassignedStudents']);
-        Route::get('/teacher/drawings/{filename}', [TeacherController::class, 'showDrawing'])
-            ->name('teacher.showDrawing');
+
     });
 
     Route::get('/teacher/submissions', [SubmissionController::class, 'viewSubmissions'])->name('teacher.submissions');

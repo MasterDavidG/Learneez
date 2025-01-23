@@ -62,6 +62,8 @@ body {
 }
 
 .assign-textbook-dropdown {
+    font-style: bold;
+    color: #005684;
     padding: 10px 15px;
     border: 1px solid #ccc;
     border-radius: 10px;
@@ -71,7 +73,7 @@ body {
 
 .assign-textbook-button {
     background: linear-gradient(to bottom right, #38a3a5, #57cc99);
-    color: white;
+    color: rgb(0, 0, 0);
     font-weight: bold;
     border: none;
     border-radius: 10px;
@@ -206,20 +208,4 @@ body {
         font-size: 1rem;
         padding: 15px;
     }
-}
-/* Global Styling */
-@font-face {
-    font-family: 'Adys';
-    src: url('/WOFF/ADYS-Regular.woff2') format('woff2'),
-         url('/WOFF/ADYS-Regular.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-body {
-    font-family: 'Adys', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to bottom, #f0f8ff, #dbeafe);
-    color: #333;
 }

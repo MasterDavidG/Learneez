@@ -14,7 +14,7 @@ const Header = () => {
             <nav className={`navbar ${isNavVisible ? 'visible' : ''}`}>
                 <ul>
                     <li><a href="/">Начало</a></li>
-                    <li><a href="/features">Продукт</a></li>
+                    <li><a href="/product">Продукт</a></li>
                     <li><a href="/about">За нас</a></li>
                     <li><a href="/contact">Контакти</a></li>
                 </ul>

@@ -1,8 +1,6 @@
-// Import your main CSS
-import '../css/app.css'; // This file should include @font-face for Adys and other global styles
-import './bootstrap'; // Bootstrap any necessary JavaScript
+import '../css/app.css';
+import './bootstrap';
 
-// Import Inertia helpers
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
@@ -10,7 +8,6 @@ import { createRoot } from 'react-dom/client';
 // Get the app name from environment variables
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
-// Create the Inertia app
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
     resolve: (name) =>
