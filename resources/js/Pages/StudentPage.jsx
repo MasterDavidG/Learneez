@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import useImage from "use-image";
 import axios from "axios";
 import DrawingCanvas from "../Components/DrawingCanvas";
+import ZoomControls from "@/Components/ZoomControls"; // Import the ZoomControls
 import { FaPen, FaEraser } from "react-icons/fa";
 import "../../css/StudentPage.css";
-import {
-    FaArrowLeft,
-    FaArrowRight,
-    FaCheckCircle,
-    FaHome,
-} from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaHome } from "react-icons/fa";
+
 const StudentPage = ({ page }) => {
     const [tool, setTool] = useState("pen");
     const [penSize, setPenSize] = useState(3);
@@ -20,6 +17,12 @@ const StudentPage = ({ page }) => {
     const [buttons, setButtons] = useState([]);
     const [isSaved, setIsSaved] = useState(false);
     const [saveMessage, setSaveMessage] = useState(false); // New state for save message
+    const [zoomLevel, setZoomLevel] = useState(1); // Zoom state
+
+    // Handle zoom changes
+    const handleZoomChange = (newZoom) => {
+        setZoomLevel(newZoom);
+    };
 
     useEffect(() => {
         if (currentPage) {
@@ -48,21 +51,20 @@ const StudentPage = ({ page }) => {
 
     const handleSaveDrawing = async (drawingJSON) => {
         try {
-            await axios.post('/student/drawing/save', {
+            await axios.post("/student/drawing/save", {
                 page_id: currentPage.id,
                 drawing_json: drawingJSON,
             });
-    
+
             // Show the save message for a few seconds
             setSaveMessage(true);
             setTimeout(() => setSaveMessage(false), 3000);
             setIsSaved(true);
         } catch (error) {
-            console.error('Error saving drawing:', error);
-            alert('Error saving drawing.');
+            console.error("Error saving drawing:", error);
+            alert("Error saving drawing.");
         }
     };
-    
 
     const handleSubmitDrawing = async (drawingJSON) => {
         try {
@@ -114,46 +116,61 @@ const StudentPage = ({ page }) => {
                 <span className="page-number-icon">📖</span>
                 {currentPage.page_number}
             </div>
-            
+
+            {/* Zoom Controls */}
+            <ZoomControls onZoomChange={handleZoomChange} />
             <div className="top-controls">
-                <button
-                    className="icon-button"
-                    onClick={() => handlePageChange("prev")}
-                >
-                    <FaArrowLeft />
-                </button>
-                <button
-                    className="icon-button"
-                    onClick={() => handlePageChange("next")}
-                >
-                    <FaArrowRight />
-                </button>
-                <button className="icon-button" onClick={handleMarkAsDone}>
-                    <FaCheckCircle />
-                </button>
-                <button
-                    className="icon-button"
-                    onClick={() => {
-                        if (document.querySelector(".save-button")) {
-                            document.querySelector(".save-button").click();
-                        }
-                        window.location.href = "/student";
-                    }}
-                >
-                    <FaHome />
-                </button>
+                    <button
+                        className="icon-button"
+                        onClick={() => handlePageChange("prev")}
+                    >
+                        <FaArrowLeft />
+                    </button>
+                    <button
+                        className="icon-button"
+                        onClick={() => handlePageChange("next")}
+                    >
+                        <FaArrowRight />
+                    </button>
+                    <button className="icon-button" onClick={handleMarkAsDone}>
+                        <FaCheckCircle />
+                    </button>
+                    <button
+                        className="icon-button"
+                        onClick={() => {
+                            if (document.querySelector(".save-button")) {
+                                document.querySelector(".save-button").click();
+                            }
+                            window.location.href = "/student";
+                        }}
+                    >
+                        <FaHome />
+                    </button>
+                </div>
+            <div
+                className="app-content"
+                style={{
+                    transform: `scale(${zoomLevel})`,
+                    transformOrigin: "center top 0px", // Consistent scaling from the top-left
+                }}
+            >
+               
+<div className="drawing-test">
+                {/* Drawing Canvas */}
+                <DrawingCanvas
+                    currentPage={currentPageImage}
+                    buttons={buttons}
+                    tool={tool}
+                    penSize={penSize}
+                    onSaveDrawing={handleSaveDrawing}
+                    onSubmitDrawing={isSaved ? handleSubmitDrawing : null}
+                    canvasSize={canvasSize}
+                    pageId={currentPage.id}
+                />
+                </div>
             </div>
 
-            <DrawingCanvas
-                currentPage={currentPageImage}
-                buttons={buttons}
-                tool={tool}
-                penSize={penSize}
-                onSaveDrawing={handleSaveDrawing}
-                onSubmitDrawing={isSaved ? handleSubmitDrawing : null}
-                canvasSize={canvasSize}
-                pageId={currentPage.id}
-            />
+            {/* Side Controls */}
             <div className="side-controls">
                 <button onClick={() => setTool("pen")} className="icon-button">
                     <FaPen />
@@ -166,6 +183,7 @@ const StudentPage = ({ page }) => {
                 </button>
             </div>
 
+            {/* Slider Control */}
             <div className="side-controls-slider">
                 <input
                     type="range"
@@ -176,14 +194,12 @@ const StudentPage = ({ page }) => {
                     className="vertical-slider"
                 />
             </div>
+
+            {/* Save Message */}
             {saveMessage && (
-    <div className="save-message">
-        ✨ Your drawing is saved! Great job! 🎨
-    </div>
-)}
-
+                <div className="save-message">✨ Your drawing is saved! Great job! 🎨</div>
+            )}
         </div>
-
     );
 };
 

@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 
-const ZoomControls = () => {
-    const [zoomLevel, setZoomLevel] = useState(1); // Default zoom level is 100%
+const ZoomControls = ({ onZoomChange }) => {
+    const [zoomLevel, setZoomLevel] = useState(1); // Default zoom level: 100%
 
     const increaseZoom = () => {
-        setZoomLevel((prev) => Math.min(prev + 0.1, 2)); // Cap zoom at 200%
+        const newZoom = Math.min(zoomLevel + 0.1, 1,5); // Cap at 200%
+        setZoomLevel(newZoom);
+        onZoomChange(newZoom);
     };
 
     const decreaseZoom = () => {
-        setZoomLevel((prev) => Math.max(prev - 0.1, 0.5)); // Minimum zoom 50%
+        const newZoom = Math.max(zoomLevel - 0.1, 0.3); // Min at 50%
+        setZoomLevel(newZoom);
+        onZoomChange(newZoom);
     };
 
     const resetZoom = () => {
         setZoomLevel(1); // Reset to 100%
+        onZoomChange(1);
     };
 
     return (
@@ -24,13 +29,7 @@ const ZoomControls = () => {
             >
                 -
             </button>
-            <button
-                className="zoom-button"
-                onClick={resetZoom}
-                aria-label="Reset Zoom"
-            >
-                Reset
-            </button>
+           
             <button
                 className="zoom-button"
                 onClick={increaseZoom}
@@ -38,15 +37,7 @@ const ZoomControls = () => {
             >
                 +
             </button>
-            <div className="zoom-level">Zoom: {(zoomLevel * 100).toFixed(0)}%</div>
-
-            {/* Apply zoom dynamically */}
-            <style>{`
-                body {
-                    transform: scale(${zoomLevel});
-                    transform-origin: 0 0; /* Keep scaling consistent from top-left */
-                }
-            `}</style>
+            <div className="zoom-level">{(zoomLevel * 10).toFixed(0)}</div>
         </div>
     );
 };

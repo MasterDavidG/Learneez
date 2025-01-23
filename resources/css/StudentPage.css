@@ -468,12 +468,12 @@ h1 {
 }
 
 .zoom-button {
-  background: #89cff0; /* Soft blue for buttons */
+  background: #1fa2ff; /* Soft blue for buttons */
   color: white;
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   font-size: 20px;
   font-weight: bold;
   cursor: pointer;
@@ -490,4 +490,8 @@ h1 {
 .zoom-level {
   font-size: 16px;
   color: #333;
+}
+
+.drawing-test {
+  align-items: center;
 }
