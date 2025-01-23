@@ -114,6 +114,7 @@ const StudentPage = ({ page }) => {
                 <span className="page-number-icon">📖</span>
                 {currentPage.page_number}
             </div>
+            
             <div className="top-controls">
                 <button
                     className="icon-button"

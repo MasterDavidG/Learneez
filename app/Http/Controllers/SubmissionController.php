@@ -25,6 +25,7 @@ class SubmissionController extends Controller
             ->orderBy('submissions.created_at', 'desc')
             ->leftJoin('pages', 'pages.id', 'submissions.page_id')
             ->select('submissions.*', 'pages.textbook_id', 'pages.image')
+            ->where('submissions.student_id', $studentId)
             ->get();
 
         return response()->json($submissions);
@@ -120,6 +121,7 @@ class SubmissionController extends Controller
     }
     public function showDrawing($filename)
     {
+
         try {
             $filePath = "drawings/{$filename}";
     

@@ -1,11 +1,50 @@
-.login-container {
-    max-width: 400px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    padding: 30px;
+.guest-layout {
+    display: flex;
+    min-height: 80vh;
+    align-items: center;
+    justify-content: center;
+    background: url('background.jpg') no-repeat center center fixed; /* Path to your background image */
+    background-size: cover;
+    padding-top: 0rem;
+}
+
+.logo-container {
+    margin-bottom: 1.5rem;
+}
+
+.app-logo {
+    max-width: 150px;
+    height: auto;
+}
+
+.content-container {
+    
+    width: 200%;
+    max-width: 500px;
+    background-color: white;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin-top: 300px;
+
+    padding: 50px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
+    justify-content: center;
+}
+
+@media (min-width: 640px) {
+    .guest-layout {
+        padding-top: 0;
+    }
+
+    .content-container {
+        margin-top: 1.5rem;
+    }
+}
+.login-container {
+
 }
 
 .login-header {

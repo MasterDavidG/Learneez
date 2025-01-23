@@ -1,9 +1,59 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 body {
     overflow-x: hidden;
+    font-family: 'Arial', sans-serif; /* Ensure readability for children */
+    background-color: #f7fbfe; /* Light blue-gray background for the app */
+}
+
+/* WebKit Browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 14px; /* Increased width for better visibility */
+    height: 14px; /* Consistent height for horizontal scrolling */
+}
+
+::-webkit-scrollbar-track {
+    background: #e0f1ff; /* Light blue-gray for the track */
+    border-radius: 20px; /* Fully rounded track */
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Subtle inner shadow for depth */
+}
+
+::-webkit-scrollbar-thumb {
+    background: #89cff0; /* Soft blue for the scroller (thumb) */
+    border: 3px solid #ffffff; /* White border for better contrast */
+    border-radius: 20px; /* Fully rounded scroller */
+    transition: background 0.3s ease, border 0.3s ease; /* Smooth hover effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #5bb7ea; /* Slightly darker blue on hover */
+    border: 3px solid #d6eaf8; /* Lighter blue border on hover */
+}
+
+::-webkit-scrollbar-corner {
+    background: #e0f1ff; /* Consistent corner color with the track */
+}
+
+/* Firefox */
+html {
+    scrollbar-shadow-color: #f7fbfe;
+    scrollbar-base-color: #5bb7ea;
+    scrollbar-width: auto; /* Thin scrollbar for better appearance */
+    scrollbar-color: #89cff0 #e0f1ff; /* Soft blue scroller and light blue-gray track */
+}
+
+/* Scrollable Container Enhancements */
+.scrollable-container {
+    scroll-behavior: smooth; /* Smooth scrolling for a pleasant experience */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Disable horizontal scrolling unless necessary */
+}
+
+/* Accessibility Improvements */
+body {
+    font-size: 16px; /* Comfortable font size for children */
+    color: #333; /* High contrast text color */
 }
 
 /* Regular */

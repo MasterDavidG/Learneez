@@ -45,8 +45,8 @@ const Welcome = () => {
                         </div>
                         <div className="feature-item">
                             <FaHeadphones size={40} color="#0056b3" />
-                            <h3>Audio Guidance</h3>
-                            <p>Step-by-step audio instructions for enhanced understanding.</p>
+                            <h3>Аудио инструкции</h3>
+                            <p>Затруднението в четенето се елиминира напълно с интерактивни аудио битони.</p>
                         </div>
                         <div className="feature-item">
                             <FaUserCheck size={40} color="#0056b3" />
@@ -64,20 +64,19 @@ const Welcome = () => {
                 <section className="problem">
                     <div className="problem-content">
                         <div className="text">
-                            <h2>The Challenge</h2>
+                            <h2>Нашата цел</h2>
                             <p>
-                                Many students face challenges with traditional learning methods. <strong>Learneez</strong> provides 
-                                <strong>tailored support</strong>, making education more accessible and engaging.
-                            </p>
+                            Целите, които сме си поставили са насочени към това, учениците да са максимално мотивирани да положат усилия, за да се справят с домашните си сами, използвайки познатите им електронни устройства и модерни технологии.
+                             </p>
                         </div>
                         <img src={learneezChallenge} alt="Challenge Learneez" className="challenge-image" />
                     </div>
                 </section>
 
                 <section className="call-to-action">
-                    <h2>Start Your Journey Today!</h2>
-                    <p>Join us in transforming education and unlocking potential for every student.</p>
-                    <a href="/register" className="cta-button">Sign Up Now</a>
+                    <h2>Започнете сега</h2>
+                    <p>Нужна е единствено регистрация</p>
+                    <a href="/register" className="cta-button">Старт</a>
                 </section>
             </main>
 

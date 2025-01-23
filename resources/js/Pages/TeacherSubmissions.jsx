@@ -48,7 +48,14 @@ const TeacherSubmissions = ({ auth, studentId }) => {
             console.error('Error fetching textbooks:', error);
         }
     };
-
+    const fetchUserTextbooks = async () => {
+        try {
+            const response = await axios.get('/api/textbooks');
+            setTextbooks(response.data);
+        } catch (error) {
+            console.error('Error fetching textbooks:', error);
+        }
+    };
     const handleAssignHomework = async () => {
         if (!selectedTextbook || !selectedPage) {
             alert('Please select both a textbook and a page to assign.');

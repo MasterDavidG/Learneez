@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Stage, Layer, Line, Image, Rect, Text, Group } from "react-konva";
 import axios from "axios";
 import { FaSave, FaPaperPlane } from "react-icons/fa"; // Icons from react-icons
+//import '../../css/DrawingCanvas.css'
 const DrawingCanvas = ({
     currentPage,
     buttons,
@@ -17,7 +18,9 @@ const DrawingCanvas = ({
     const [hoveredButton, setHoveredButton] = useState(null);
     const isDrawing = useRef(false);
     const canvasRef = useRef(null);
-
+    const [playingAudio, setPlayingAudio] = useState(null); // Track the currently playing audio button index
+    const audioRef = useRef(null); // Ref for the audio object
+    
     // Load saved drawing from the server
     useEffect(() => {
         const fetchSavedDrawing = async () => {
@@ -116,12 +119,27 @@ const DrawingCanvas = ({
     };
 
     // Play audio
-    const playAudio = (audioPath) => {
+const toggleAudio = (audioPath, index) => {
+    if (playingAudio === index) {
+        // Stop the currently playing audio
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setPlayingAudio(null);
+    } else {
+        // Play a new audio
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+        }
         const audio = new Audio(audioPath);
-        audio
-            .play()
-            .catch((error) => console.error("Error playing audio:", error));
-    };
+        audioRef.current = audio;
+        setPlayingAudio(index);
+        audio.play().catch((error) => console.error("Error playing audio:", error));
+
+        // Reset state when audio ends
+        audio.addEventListener("ended", () => setPlayingAudio(null));
+    }
+};
 
     return (
         <div className="drawing-canvas">
@@ -134,40 +152,38 @@ const DrawingCanvas = ({
                 onPointerUp={handlePointerUp}
                 onPointerLeave={handlePointerLeave}
             >
+                
                 <Layer>{currentPage && <Image image={currentPage} />}</Layer>
                 <Layer>
                     {buttons.map((button, index) => (
                         <Group
-                            key={index}
-                            onClick={() => playAudio(button.audio)}
-                            onMouseEnter={() => setHoveredButton(index)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            <Rect
-                                x={button.x - 20}
-                                y={button.y - 15}
-                                width={40}
-                                height={40}
-                                fill={
-                                    hoveredButton === index
-                                        ? "#64B5F6"
-                                        : "#5DADE2"
-                                }
-                                stroke="#4682B4"
-                                strokeWidth={3}
-                                cornerRadius={12}
-                            />
-                            <Text
-                                x={button.x - 9}
-                                y={button.y - 8}
-                                text="▶"
-                                fontSize={24}
-                                fontFamily="Arial"
-                                fill="white"
-                                shadowColor="black"
-                                shadowBlur={3}
-                            />
-                        </Group>
+                        key={index}
+                        onClick={() => toggleAudio(button.audio, index)}
+                        onMouseEnter={() => setHoveredButton(index)}
+                        onMouseLeave={() => setHoveredButton(null)}
+                    >
+                        <Rect
+                            x={button.x - 20}
+                            y={button.y - 15}
+                            width={40}
+                            height={40}
+                            fill={hoveredButton === index ? "#64B5F6" : "#5DADE2"}
+                            stroke="#4682B4"
+                            strokeWidth={3}
+                            cornerRadius={12}
+                        />
+                        <Text
+                            x={button.x - 9}
+                            y={button.y - 8}
+                            text={playingAudio === index ? "■" : "▶"} // Toggle text between stop and play
+                            fontSize={24}
+                            fontFamily="Arial"
+                            fill="white"
+                            shadowColor="black"
+                            shadowBlur={3}
+                        />
+                    </Group>
+                    
                     ))}
                 </Layer>
                 <Layer>

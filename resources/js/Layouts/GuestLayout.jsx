@@ -1,20 +1,18 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Link } from '@inertiajs/react';
-import Footer from '@/Components/Footer';
+import ApplicationLogo from "@/Components/ApplicationLogo";
+import { Link } from "@inertiajs/react";
+import Footer from "@/Components/Footer";
+import Header from "@/Components/Header";
+import "../../css/GuestLayout.css";
+import "../../css/Welcome.css";
+import FrontPageLayout from "./FrontPageLayout";
 export default function GuestLayout({ children }) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
-            <div>
+        <FrontPageLayout>
+            <div className="logo-container">
                 <Link href="/">
-                    <ApplicationLogo className="" />
                 </Link>
             </div>
-
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
-                {children}
-            </div>
-            <Footer></Footer>
-
-        </div>
+            <div className="content-container">{children}</div>
+       </FrontPageLayout>
     );
 }

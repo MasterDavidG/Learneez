@@ -66,8 +66,9 @@ class TeacherController extends Controller
 
     public function showDrawing($page_id)
     {
+        $userId = Auth::id();
         try {
-            $submission = Submission::where('page_id', $page_id)->first();
+            $submission = Submission::where('page_id', $page_id)->where('student_id', $userId)->first();
             if (!$submission)
                 return response([], 200);
             $filename = $submission->drawing;
