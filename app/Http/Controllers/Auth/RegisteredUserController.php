@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\Mailer\Exception\UnexpectedResponseException;
 
 class RegisteredUserController extends Controller
 {
@@ -47,9 +48,14 @@ class RegisteredUserController extends Controller
         ]);
 
         // Fire the registered event
-        event(new Registered($user));
-
-        // Log in the new user
+        try {
+            event(new Registered($user));
+            
+            // Log in the new user
+        } catch (UnexpectedResponseException $error) {
+            
+        }
+        
         Auth::login($user);
 
         // Redirect to the dashboard

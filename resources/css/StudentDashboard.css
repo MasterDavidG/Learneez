@@ -135,26 +135,28 @@ body {
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 25px;
+    gap: 35px;
     margin-top: 20px;
 }
 
 .grid-item {
     background: linear-gradient(to top left, #6dd5ed, #2193b0);
     color: white;
-    font-size: 1.3rem;
+    font-size: 3.3rem;
     font-weight: bold;
     text-align: center;
-    padding: 20px;
+    padding: 7px;
+    padding-top: 15px;
     border-radius: 15px;
+    
     transition: all 0.4s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 3px 5px 6px rgba(0, 70, 120, 0.635);
     cursor: pointer;
 }
 
 .grid-item:hover {
     transform: scale(1.1) rotate(2deg);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 20px rgb(0, 98, 255);
 }
 
 .grid-item.homework-page {
@@ -205,7 +207,8 @@ body {
     }
 
     .book-item, .grid-item {
-        font-size: 1rem;
+        font-size: 2rem;
         padding: 15px;
+        padding-top: 10px;
     }
 }

@@ -116,29 +116,12 @@
   background-size: cover;
 }
 
-/* Page Number Styling */
-h1 {
-  background-color: #ffdd57;
-  color: #333;
-  padding: 8px 16px;
-  border-radius: 12px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 24px;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
 /* Top Controls Styling */
 .top-controls {
   display: flex;
-  gap: 15px;
-  background-color: #fff4e6;
+  gap: 45px;
+  background-color: #f5f5f5;
   padding: 10px 20px;
   border-radius: 15px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -148,7 +131,7 @@ h1 {
 .top-controls .icon-button {
   width: 55px;
   height: 55px;
-  background-color: #ffe0b2;
+  background-color: #ffdb86;
   border: none;
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -203,7 +186,7 @@ h1 {
 @media (max-width: 768px) {
   .top-controls {
     flex-direction: row;
-    gap: 10px;
+    gap: 20px;
     justify-content: space-evenly;
   }
 
@@ -242,7 +225,7 @@ h1 {
 .icon-button {
   width: 60px;
   height: 60px;
-  background-color: #24c5ff; /* Green for save button */
+  background-color: #24baff; /* Green for save button */
   border: none;
   border-radius: 50%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -288,9 +271,9 @@ h1 {
 
   color: white;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  font-size: 36px;
+  width: 80px;
+  height: 80px;
+  font-size: 58px;
   background-color: #7a4cf0;
   cursor: pointer;
   display: flex;
@@ -401,24 +384,25 @@ h1 {
 .page-number {
   display: flex;
   align-items: center;
+  border-color: #81bcff;
+  border-width: 3px;
   gap: 10px;
-  background-color: #ffdd57;
-  color: #333;
-  padding: 8px 16px;
+  background-color: #63b4ff;
+  color: #ffffff;
+  padding: 3px 10px;
   border-radius: 12px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  font-size: 24px;
+  font-size: 34px;
   font-weight: bold;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  text-shadow: 3px 3px 2px #00000033;
   position: absolute;
   top: 20px;
-  left: 20px;
+  left: 10px;
 }
 
 /* Icon Styling */
 .page-number-icon {
-  font-size: 28px;
-  color: #333;
+  font-size: 34px;
 }
 .save-message {
   position: fixed;
@@ -454,27 +438,28 @@ h1 {
 }
 .zoom-controls {
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
   background: #f7f7f7;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
+  border: 3px solid #1f78ff;
+  border-radius: 50px;
+  padding: 0px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
-  gap: 10px;
+  flex-direction: column;
+  gap: 0px;
   z-index: 1000;
 }
 
 .zoom-button {
-  background: #1fa2ff; /* Soft blue for buttons */
+  background: #3faae4; /* Soft blue for buttons */
   color: white;
   border: none;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  font-size: 20px;
+  border-radius: 70%;
+  width: 55px;
+  height: 55px;
+  font-size: 40px;
   font-weight: bold;
   cursor: pointer;
   display: flex;
@@ -486,11 +471,17 @@ h1 {
 .zoom-button:hover {
   background: #5bb7ea; /* Slightly darker blue on hover */
 }
-
 .zoom-level {
-  font-size: 16px;
-  color: #333;
+
+  font-size: 38px; /* Larger font size */
+  font-weight:bolder; /* Extra bold for a "fat" look */
+  color: #676767; /* Bright, child-friendly color */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Adds depth for a playful effect */
+  font-family: 'Comic Sans MS', 'Arial', sans-serif; /* Child-friendly font */
+  text-align: center; /* Center the text */
+font-style: italic;
 }
+
 
 .drawing-test {
   align-items: center;

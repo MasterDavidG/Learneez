@@ -252,7 +252,7 @@ const AdminPage = ({ auth, pages: initialPages }) => {
         <AuthenticatedLayout auth={auth}>
             <div className="admin-page-container">
                 <header className="admin-header">
-                    <h1>Админ Панел</h1>
+                    <h1>Добре Дошъл, Админ</h1>
                 </header>
 
                 <div className="upload-section">
@@ -331,7 +331,7 @@ const AdminPage = ({ auth, pages: initialPages }) => {
 
                 {pageId && (
                     <div className="page-editor-section">
-                        <h2>Създай Аудио Бутони</h2>
+                        <h2>Създаване на Аудио Бутони</h2>
                         <ResponsiveStage
                             imageSrc={`/pages/${
                                 pages.find((p) => p.id === pageId)?.textbook_id

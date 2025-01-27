@@ -13,17 +13,25 @@ const About = () => {
                 <section className="intro">
                     <h2>About us</h2>
                     <p>
-                        Learneez is designed to support students with special educational needs. 
-                        Our platform provides interactive tools to enhance learning experiences, ensuring every student receives personalized attention.
-                    </p>
+                      
+Самоподготовка
+
+Целите, които сме си поставили са насочени към това, учениците да са максимално мотивирани да положат усилия, за да се справят с домашните си сами, използвайки познатите им електронни устройства и модерни технологии.
+Родителски контрол
+
+                         </p>
                 </section>
                 
                 <section className="problem">
                     <h2>The Challenge</h2>
                     <p>
-                        Many students struggle with traditional learning methods. 
-                        Learneez addresses these challenges by offering tailored support, making education accessible and enjoyable for everyone.
-                    </p>
+                       
+Разработените приложения заместват родителя и подкрепата, от която се нуждаят малките ученици. Нуждата от индивидуално внимание е минимална. Улесняват родителският контрол, върху работата на детето.
+Свободно време
+
+Децата с дислексия полагат многократно повече усилия, при писане и четене, съответно и много бързо се изморяват. Концентрацията им бързо се изчерпва, предвид и малката им възраст. Имат нужда от дълги и по-чести почивки. Новите технологии щадят силите на децата и техните родители. Освобождават време за любими занимания.
+
+                           </p>
                 </section>
                 <section className="call-to-action">
                     <h2>Get Started Today!</h2>

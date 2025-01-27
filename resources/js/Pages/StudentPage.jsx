@@ -17,7 +17,7 @@ const StudentPage = ({ page }) => {
     const [buttons, setButtons] = useState([]);
     const [isSaved, setIsSaved] = useState(false);
     const [saveMessage, setSaveMessage] = useState(false); // New state for save message
-    const [zoomLevel, setZoomLevel] = useState(1); // Zoom state
+    const [zoomLevel, setZoomLevel] = useState(0.6); // Zoom state
 
     // Handle zoom changes
     const handleZoomChange = (newZoom) => {
@@ -128,15 +128,6 @@ const StudentPage = ({ page }) => {
                     </button>
                     <button
                         className="icon-button"
-                        onClick={() => handlePageChange("next")}
-                    >
-                        <FaArrowRight />
-                    </button>
-                    <button className="icon-button" onClick={handleMarkAsDone}>
-                        <FaCheckCircle />
-                    </button>
-                    <button
-                        className="icon-button"
                         onClick={() => {
                             if (document.querySelector(".save-button")) {
                                 document.querySelector(".save-button").click();
@@ -146,6 +137,17 @@ const StudentPage = ({ page }) => {
                     >
                         <FaHome />
                     </button>
+                    <button
+                        className="icon-button"
+                        onClick={() => handlePageChange("next")}
+                    >
+                        <FaArrowRight />
+                    </button>
+
+                    <button className="icon-button" onClick={handleMarkAsDone}>
+                        <FaCheckCircle />
+                    </button>
+
                 </div>
             <div
                 className="app-content"
