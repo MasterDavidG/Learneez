@@ -119,25 +119,6 @@ class SubmissionController extends Controller
 
         return response()->json($submission);
     }
-    public function showDrawing($filename)
-    {
-
-        try {
-            $filePath = "drawings/{$filename}";
-    
-            if (!Storage::exists($filePath)) {
-                Log::warning("Drawing file not found: {$filePath}");
-                abort(404, 'File not found');
-            }
-    
-            $fileContent = Storage::get($filePath);
-            $mimeType = Storage::mimeType($filePath);
-    
-            return response($fileContent, 200)->header('Content-Type', $mimeType ?? 'application/json');
-        } catch (\Exception $e) {
-            Log::error("Error fetching drawing: {$e->getMessage()}");
-            return response()->json(['error' => 'Failed to load drawing'], 500);
-        }
-    }
+ 
     
 }

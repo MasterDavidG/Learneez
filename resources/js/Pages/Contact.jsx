@@ -13,23 +13,25 @@ const About = () => {
                 <section className="intro">
                     <h2>About us</h2>
                     <p>
-                        Learneez is designed to support students with special educational needs. 
-                        Our platform provides interactive tools to enhance learning experiences, ensuring every student receives personalized attention.
-                    </p>
+                    Сдружение Учи Лесно - гр. София
+Email: info@learneez.eu
+Site: www.learneez.eu
+Tел.: +359 887 371361
+Банкова сметка (BGN)
+
+IBAN: BG16FINV91501217439369
+BIC: FINVBGSF
+Титуляр: УЧИ ЛЕСНО СДРУЖЕНИЕ
+Технически одел:
+
+Tел.: +359 888 032843
+Tел.: +359 888 499005
+Tел.: +359 898 211411
+
+
+                                </p>
                 </section>
-                
-                <section className="problem">
-                    <h2>The Challenge</h2>
-                    <p>
-                        Many students struggle with traditional learning methods. 
-                        Learneez addresses these challenges by offering tailored support, making education accessible and enjoyable for everyone.
-                    </p>
-                </section>
-                <section className="call-to-action">
-                    <h2>Get Started Today!</h2>
-                    <p>Join us in transforming education for special needs students.</p>
-                    <a href="/register" className="cta-button">Start Learning</a>
-                </section>
+            
             </main>
         </div>
         </FrontPageLayout>
