@@ -3,6 +3,11 @@
         Options -MultiViews -Indexes
     </IfModule>
 
+    SSLOptions +StrictRequire
+    SSLRequireSSL
+    SSLRequire %{HTTP_HOST} eq "learneez.eu"
+    ErrorDocument 403 https://learneez.eu
+
     RewriteEngine On
 
     # Handle Authorization Header
