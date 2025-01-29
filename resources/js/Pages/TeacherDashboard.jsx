@@ -55,7 +55,7 @@ const TeacherDashboard = ({ auth }) => {
             <div className="teacher-dashboard">
                 <header className="dashboard-header">
                     <button onClick={handleLogout} className="logout-button">Logout</button>
-                    <h1>Учителски Панел</h1>
+                    <h1>Здравей Учител</h1>
                 </header>
 
                 <div className="student-selection-container">

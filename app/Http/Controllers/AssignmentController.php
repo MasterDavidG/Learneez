@@ -26,4 +26,14 @@ class AssignmentController extends Controller
         
         return response()->json($assignment);
     }
+    public function checkAssignmentStatus($pageId)
+{
+    $assignment = Assignment::where('page_id', $pageId)->first();
+
+    return response()->json([
+        'hasAssignment' => $assignment ? true : false,
+        'isDone' => $assignment && $assignment->task_status === 'completed' ? true : false
+    ]);
+}
+
 }

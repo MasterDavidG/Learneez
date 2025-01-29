@@ -10,7 +10,8 @@ use App\Http\Controllers\{
     PageController,
     AdminController,
     ButtonController,
-    ProfileController
+    ProfileController, 
+    AssignmentController
 };
 
 require __DIR__ . '/auth.php';
@@ -71,6 +72,7 @@ Route::middleware('auth')->group(function () {
         ->name('student.submission.view');
         // Mark a page as done
         Route::post('/student/page/{pageId}/mark-as-done', [StudentController::class, 'markAsDone'])->name('student.page.markAsDone');
+        Route::get('/student/page/{id}/assignment-status', [AssignmentController::class, 'checkAssignmentStatus']);
 
         // API for next and previous page navigation
 

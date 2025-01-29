@@ -248,6 +248,22 @@ const AdminPage = ({ auth, pages: initialPages }) => {
         }
     };
 
+    const handlePageChange = async (direction) => {
+        // Save the current drawing before navigating
+        if (document.querySelector(".save-button")) {
+            document.querySelector(".save-button").click();
+        }
+
+        try {
+            const response = await axios.get(
+                `/student/page/${currentPage.id}/${direction}`
+            );
+            setCurrentPage(response.data);
+        } catch (error) {
+            console.error(`Error fetching ${direction} page:`, error);
+            alert(`No ${direction} page available.`);
+        }
+    };
     return (
         <AuthenticatedLayout auth={auth}>
             <div className="admin-page-container">

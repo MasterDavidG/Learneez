@@ -7,6 +7,7 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 const StudentDashboard = ({ auth }) => {
     const [textbooks, setTextbooks] = useState([]);
     const [userTextbooks, setUserTextbooks] = useState([]);
+    const [homeworkPages, setHomeworkPages] = useState({});
 
     const [pages, setPages] = useState([]);
     const [selectedTextbook, setSelectedTextbook] = useState(null);
@@ -21,7 +22,6 @@ const StudentDashboard = ({ auth }) => {
     useEffect(() => {
         fetchTextbooks();
         fetchUserTextbooks();
-        fetchHomeworkStatus();
         fetchProfile();
     }, []);
 
@@ -41,13 +41,31 @@ const StudentDashboard = ({ auth }) => {
                 console.error("Error fetching textbooks:", error)
             );
     };
-    const fetchHomeworkStatus = () => {
-        axios
-            .get("/api/student/homework-status")
-            .then((response) => setHomeworkPage(response.data.page_id))
-            .catch((error) =>
-                console.error("Error fetching homework status:", error)
+    const fetchHomeworkStatusForPages = async (pages) => {
+        if (pages.length === 0) return;
+
+        try {
+            const responses = await Promise.all(
+                pages.map((page) =>
+                    axios.get(`/student/page/${page.id}/assignment-status`)
+                )
             );
+
+            const updatedHomeworkPages = pages.reduce((acc, page, index) => {
+                const { hasAssignment, isDone } = responses[index].data;
+
+                acc[page.id] = {
+                    hasAssignment: hasAssignment,
+                    isCompleted: isDone, // ✅ Now correctly checking if it's done
+                };
+
+                return acc;
+            }, {});
+
+            setHomeworkPages(updatedHomeworkPages);
+        } catch (error) {
+            console.error("Error fetching homework status for pages:", error);
+        }
     };
 
     const fetchProfile = () => {
@@ -56,22 +74,27 @@ const StudentDashboard = ({ auth }) => {
             .then((response) => setProfile(response.data))
             .catch((error) => console.error("Error fetching profile:", error));
     };
-
-    const handleTextbookChange = (textbookId) => {
+    const handleTextbookChange = async (textbookId) => {
         setSelectedTextbook(textbookId);
         setPages([]);
+        setHomeworkPages({}); // Reset homework status
 
-        axios
-            .get(`/api/textbooks/${textbookId}/pages`)
-            .then((response) => {
-                setPages(response.data);
-                setTimeout(() => {
-                    pagesSectionRef.current?.scrollIntoView({
-                        behavior: "smooth",
-                    });
-                }, 100);
-            })
-            .catch((error) => console.error("Error fetching pages:", error));
+        try {
+            const response = await axios.get(
+                `/api/textbooks/${textbookId}/pages`
+            );
+            setPages(response.data);
+            fetchHomeworkStatusForPages(response.data); // Fetch homework status **after** setting pages
+
+            // Smooth scroll **from current position**
+            setTimeout(() => {
+                const scrollAmount =
+                    pagesSectionRef.current.getBoundingClientRect().top - 100; // Adjust offset
+                window.scrollBy({ top: scrollAmount, behavior: "smooth" });
+            }, 200); // Delay to allow DOM update
+        } catch (error) {
+            console.error("Error fetching pages:", error);
+        }
     };
 
     const handleAssignTextbook = () => {
@@ -92,18 +115,6 @@ const StudentDashboard = ({ auth }) => {
                     error.response?.data?.error || "Failed to assign textbook."
                 );
             });
-    };
-
-    const handleMarkAsDone = (pageId) => {
-        axios
-            .post(`/api/student/page/${pageId}/mark-as-done`)
-            .then(() => {
-                alert("Page marked as done!");
-                if (pageId === homeworkPage) setHomeworkPage(null);
-            })
-            .catch((error) =>
-                console.error("Error marking page as done:", error)
-            );
     };
 
     const handleRemoveTeacher = () => {
@@ -188,34 +199,32 @@ const StudentDashboard = ({ auth }) => {
                     <section ref={pagesSectionRef} className="pages-grid">
                         <h2>Страница</h2>
                         <div className="grid-container">
-                            {pages.map((page) => (
-                                <div
-                                    className={`grid-item ${
-                                        page.id === homeworkPage
-                                            ? "homework-page styled-homework"
-                                            : ""
-                                    }`}
-                                    key={page.id}
-                                    onClick={() =>
-                                        (window.location.href = `/student/page/${page.id}?textbookId=${selectedTextbook}`)
-                                    }
-                                >
-                                    <span className="page-number">
-                                        {page.page_number}
-                                    </span>
-                                    {page.id === homeworkPage && (
-                                        <button
-                                            className="button done"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleMarkAsDone(page.id);
-                                            }}
-                                        >
-                                            Done
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
+                            {pages.map((page) => {
+                                const homeworkStatus = homeworkPages[page.id];
+                                const isHomework =
+                                    homeworkStatus?.hasAssignment;
+                                const isCompleted = homeworkStatus?.isCompleted;
+
+                                return (
+                                    <div
+                                        className={`grid-item ${
+                                            isHomework
+                                                ? isCompleted
+                                                    ? "homework-page completed-homework" // New class for completed homework
+                                                    : "homework-page styled-homework" // Existing class for non-completed homework
+                                                : ""
+                                        }`}
+                                        key={page.id}
+                                        onClick={() =>
+                                            (window.location.href = `/student/page/${page.id}?textbookId=${selectedTextbook}`)
+                                        }
+                                    >
+                                        <span className="page-number">
+                                            {page.page_number}
+                                        </span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </section>
                 )}

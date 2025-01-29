@@ -20,7 +20,7 @@ const DrawingCanvas = ({
     const canvasRef = useRef(null);
     const [playingAudio, setPlayingAudio] = useState(null); // Track the currently playing audio button index
     const audioRef = useRef(null); // Ref for the audio object
-    
+
     // Load saved drawing from the server
     useEffect(() => {
         const fetchSavedDrawing = async () => {
@@ -119,27 +119,29 @@ const DrawingCanvas = ({
     };
 
     // Play audio
-const toggleAudio = (audioPath, index) => {
-    if (playingAudio === index) {
-        // Stop the currently playing audio
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        setPlayingAudio(null);
-    } else {
-        // Play a new audio
-        if (audioRef.current) {
+    const toggleAudio = (audioPath, index) => {
+        if (playingAudio === index) {
+            // Stop the currently playing audio
             audioRef.current.pause();
             audioRef.current.currentTime = 0;
-        }
-        const audio = new Audio(audioPath);
-        audioRef.current = audio;
-        setPlayingAudio(index);
-        audio.play().catch((error) => console.error("Error playing audio:", error));
+            setPlayingAudio(null);
+        } else {
+            // Play a new audio
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+            }
+            const audio = new Audio(audioPath);
+            audioRef.current = audio;
+            setPlayingAudio(index);
+            audio
+                .play()
+                .catch((error) => console.error("Error playing audio:", error));
 
-        // Reset state when audio ends
-        audio.addEventListener("ended", () => setPlayingAudio(null));
-    }
-};
+            // Reset state when audio ends
+            audio.addEventListener("ended", () => setPlayingAudio(null));
+        }
+    };
 
     return (
         <div className="drawing-canvas">
@@ -152,38 +154,41 @@ const toggleAudio = (audioPath, index) => {
                 onPointerUp={handlePointerUp}
                 onPointerLeave={handlePointerLeave}
             >
-                
                 <Layer>{currentPage && <Image image={currentPage} />}</Layer>
                 <Layer>
                     {buttons.map((button, index) => (
                         <Group
-                        key={index}
-                        onClick={() => toggleAudio(button.audio, index)}
-                        onMouseEnter={() => setHoveredButton(index)}
-                        onMouseLeave={() => setHoveredButton(null)}
-                    >
-                        <Rect
-                            x={button.x - 20}
-                            y={button.y - 15}
-                            width={40}
-                            height={40}
-                            fill={hoveredButton === index ? "#64B5F6" : "#5DADE2"}
-                            stroke="#4682B4"
-                            strokeWidth={3}
-                            cornerRadius={12}
-                        />
-                        <Text
-                            x={button.x - 9}
-                            y={button.y - 8}
-                            text={playingAudio === index ? "■" : "▶"} // Toggle text between stop and play
-                            fontSize={24}
-                            fontFamily="Arial"
-                            fill="white"
-                            shadowColor="black"
-                            shadowBlur={3}
-                        />
-                    </Group>
-                    
+                            key={index}
+                            onClick={() => toggleAudio(button.audio, index)} // Works for mouse
+                            onTap={() => toggleAudio(button.audio, index)} // Works for touchscreens
+                            onMouseEnter={() => setHoveredButton(index)}
+                            onMouseLeave={() => setHoveredButton(null)}
+                        >
+                            <Rect
+                                x={button.x - 20}
+                                y={button.y - 15}
+                                width={40}
+                                height={40}
+                                fill={
+                                    hoveredButton === index
+                                        ? "#64B5F6"
+                                        : "#5DADE2"
+                                }
+                                stroke="#4682B4"
+                                strokeWidth={3}
+                                cornerRadius={12}
+                            />
+                            <Text
+                                x={button.x - 9}
+                                y={button.y - 8}
+                                text={playingAudio === index ? "■" : "▶"} // Toggle text between stop and play
+                                fontSize={24}
+                                fontFamily="Arial"
+                                fill="white"
+                                shadowColor="black"
+                                shadowBlur={3}
+                            />
+                        </Group>
                     ))}
                 </Layer>
                 <Layer>
@@ -206,13 +211,13 @@ const toggleAudio = (audioPath, index) => {
                 </Layer>
             </Stage>
             <div className="drawing-buttons-container centered-buttons">
-                    <button
-                        type="button"
-                        onClick={saveDrawing}
-                        className="icon-button save-button"
-                    >
-                        <FaSave size={32} />
-                    </button>
+                <button
+                    type="button"
+                    onClick={saveDrawing}
+                    className="icon-button save-button"
+                >
+                    <FaSave size={32} />
+                </button>
 
                 {onSubmitDrawing && (
                     <button

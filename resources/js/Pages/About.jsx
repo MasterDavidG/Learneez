@@ -6,8 +6,7 @@ import FrontPageLayout from "@/Layouts/FrontPageLayout";
 const About = () => {
     return (
         <FrontPageLayout>
-            <img src={learneez1} alt="Learneez" className="welcome-image" />
-            <section className="intro">
+            <section className="about-section">
                 <h2>За нас</h2>
                 <p>
                 “Учи лесно” е сдружение с нестопанска цел, извършващо дейност в частна полза. Предметът на дейност на сдружението е свързан с разработки на методи за обучение на деца с дислексия в ученическа възраст. Сдружението извършва приоритетно дейности, по въвеждане на интегрирани системи за независима помощ при работа с учебните помагала, мултимедийни средства за обучение включени в задължителните учебни процеси определени от МОН.
@@ -35,16 +34,12 @@ const About = () => {
                     everyone.
                 </p>
             </section>
+
             <section className="call-to-action">
-                <h2>Get Started Today!</h2>
-                <p>
-                    Join us in transforming education for special needs
-                    students.
-                </p>
-                <a href="/register" className="cta-button">
-                    Start Learning
-                </a>
-            </section>
+                    <h2>Започнете сега</h2>
+                    <p>Нужна е единствено регистрация</p>
+                    <a href="/register" className="cta-button">Старт</a>
+                </section>
             <Footer></Footer>
         </FrontPageLayout>
     );

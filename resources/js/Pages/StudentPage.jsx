@@ -5,7 +5,7 @@ import DrawingCanvas from "../Components/DrawingCanvas";
 import ZoomControls from "@/Components/ZoomControls"; // Import the ZoomControls
 import { FaPen, FaEraser } from "react-icons/fa";
 import "../../css/StudentPage.css";
-import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaHome } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaHome, FaBook, FaSmile } from "react-icons/fa";
 
 const StudentPage = ({ page }) => {
     const [tool, setTool] = useState("pen");
@@ -18,6 +18,9 @@ const StudentPage = ({ page }) => {
     const [isSaved, setIsSaved] = useState(false);
     const [saveMessage, setSaveMessage] = useState(false); // New state for save message
     const [zoomLevel, setZoomLevel] = useState(0.6); // Zoom state
+    const [hasAssignment, setHasAssignment] = useState(false); // Tracks if assignment exists
+    const [isDone, setIsDone] = useState(false); // Tracks if assignment is done
+    const [showMessage, setShowMessage] = useState(false);
 
     // Handle zoom changes
     const handleZoomChange = (newZoom) => {
@@ -96,16 +99,48 @@ const StudentPage = ({ page }) => {
         }
     };
 
+
     const handleMarkAsDone = async () => {
         try {
             await axios.post(`/student/page/${currentPage.id}/mark-as-done`);
-            alert("Page marked as done!");
+            setIsDone(true); // ✅ Correct function
         } catch (error) {
             console.error("Error marking page as done:", error);
-            alert("Failed to mark the page as done.");
         }
     };
-
+    useEffect(() => {
+        if (isDone) {
+            setTimeout(() => {
+                document.querySelector(".done-button").classList.add("marked");
+            }, 300);
+        }
+    }, [isDone]);
+    
+    useEffect(() => {
+        if (currentPage) {
+            const constructedImageUrl = `/pages/${currentPage.textbook_id}/${currentPage.image}`;
+            setImageUrl(constructedImageUrl);
+    
+            const img = new window.Image();
+            img.src = constructedImageUrl;
+            img.onload = () =>
+                setCanvasSize({ width: img.width, height: img.height });
+        }
+    
+        // Fetch assignment status
+        const fetchAssignmentStatus = async () => {
+            try {
+                const response = await axios.get(`/student/page/${currentPage.id}/assignment-status`);
+                setHasAssignment(response.data.hasAssignment);
+                setIsDone(response.data.isDone);
+            } catch (error) {
+                console.error("Error fetching assignment status:", error);
+            }
+        };
+    
+        fetchAssignmentStatus();
+    }, [currentPage]);
+    
     if (!imageUrl) {
         return <div>Loading page...</div>;
     }
@@ -143,10 +178,28 @@ const StudentPage = ({ page }) => {
                     >
                         <FaArrowRight />
                     </button>
+                    <div>
+                    {hasAssignment && (
+    <button
+        className={`assignment-button ${isDone ? "done-button marked" : "hw-button"}`}
+        onClick={handleMarkAsDone}
+        disabled={isDone} // Prevent clicking again once it's marked
+    >
+        {isDone ? (
+            <FaCheckCircle className="done-icon" />
+        ) : (
+            <>
+                <FaBook className="hw-icon" />
+                <span className="hw-text">H W</span>
+            </>
+        )}
+    </button>
+)}
 
-                    <button className="icon-button" onClick={handleMarkAsDone}>
-                        <FaCheckCircle />
-                    </button>
+    </div>
+
+
+
 
                 </div>
             <div

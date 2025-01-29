@@ -10,8 +10,8 @@ const About = () => {
   
             <main className="main-content">
                 <img src={learneez1} alt="Learneez" className="welcome-image" />
-                <section className="intro">
-                    <h2>About us</h2>
+                <section className="about-section">
+                    <h2></h2>
                     <p>
                       
 Самоподготовка
@@ -22,8 +22,8 @@ const About = () => {
                          </p>
                 </section>
                 
-                <section className="problem">
-                    <h2>The Challenge</h2>
+                <section className="about-section">
+                    <h2>За продукта</h2>
                     <p>
                        
 Разработените приложения заместват родителя и подкрепата, от която се нуждаят малките ученици. Нуждата от индивидуално внимание е минимална. Улесняват родителският контрол, върху работата на детето.
@@ -33,10 +33,11 @@ const About = () => {
 
                            </p>
                 </section>
+
                 <section className="call-to-action">
-                    <h2>Get Started Today!</h2>
-                    <p>Join us in transforming education for special needs students.</p>
-                    <a href="/register" className="cta-button">Start Learning</a>
+                    <h2>Започнете сега</h2>
+                    <p>Нужна е единствено регистрация</p>
+                    <a href="/register" className="cta-button">Старт</a>
                 </section>
             </main>
         </div>

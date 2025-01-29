@@ -298,11 +298,11 @@ body {
 }
 
 .about-section p {
-    font-size: 2.2em;
+    font-size: 1.8em;
     line-height: 1.5;
     color: #666;
     margin: 0 auto 30px;
-    max-width: 800px;
+    max-width: 1000px;
 }
 
 .about-section p strong {

@@ -9,25 +9,24 @@ const About = () => {
         <div className="welcome-container">
   
             <main className="main-content">
-                <img src={learneez1} alt="Learneez" className="welcome-image" />
-                <section className="intro">
-                    <h2>About us</h2>
+                <section className="about-section">
+                    <h2>Контакти</h2>
                     <p>
-                    Сдружение Учи Лесно - гр. София
-Email: info@learneez.eu
-Site: www.learneez.eu
-Tел.: +359 887 371361
-Банкова сметка (BGN)
+                    Сдружение Учи Лесно - гр. София<br/>
+Email: info@learneez.eu <br/>
+Site: www.learneez.eu<br/>
+Tел.: +359 887 371361<br/>
+Банкова сметка (BGN)<br/>
 
-IBAN: BG16FINV91501217439369
-BIC: FINVBGSF
-Титуляр: УЧИ ЛЕСНО СДРУЖЕНИЕ
-Технически одел:
+IBAN: BG16FINV91501217439369<br/>
+BIC: FINVBGSF<br/>
+Титуляр: УЧИ ЛЕСНО СДРУЖЕНИЕ<br/>
+Технически одел:<br/>
 
-Tел.: +359 888 032843
-Tел.: +359 888 499005
-Tел.: +359 898 211411
-
+Tел.: +359 888 032843<br/>
+Tел.: +359 888 499005<br/>
+Tел.: +359 898 211411<br/>
+Докладвайте за нередности поискайте помощ на Email: dpanamski@gmail.com
 
                                 </p>
                 </section>
