@@ -1,24 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearchPlus, FaSearchMinus } from "react-icons/fa"; // Import zoom icons
 
-const ZoomControls = ({ onZoomChange }) => {
-    const [zoomLevel, setZoomLevel] = useState(0.6); // Default zoom level: 60%
+const ZoomControls = ({ zoomLevel, onZoomChange }) => {
+    const [localZoom, setLocalZoom] = useState(zoomLevel); // Sync local state with prop
+
+    // Sync zoom level when changed externally
+    useEffect(() => {
+        setLocalZoom(zoomLevel);
+    }, [zoomLevel]);
 
     const increaseZoom = () => {
-        const newZoom = Math.min(zoomLevel + 0.1, 2); // Cap zoom at 200%
-        setZoomLevel(newZoom);
+        const newZoom = Math.min(localZoom + 0.1, 2); // Cap at 200%
+        setLocalZoom(newZoom);
         onZoomChange(newZoom);
     };
 
     const decreaseZoom = () => {
-        const newZoom = Math.max(zoomLevel - 0.1, 0.3); // Minimum zoom at 30%
-        setZoomLevel(newZoom);
+        const newZoom = Math.max(localZoom - 0.1, 0.3); // Minimum at 30%
+        setLocalZoom(newZoom);
         onZoomChange(newZoom);
-    };
-
-    const resetZoom = () => {
-        setZoomLevel(1); // Reset to 100%
-        onZoomChange(1);
     };
 
     return (
@@ -33,8 +33,8 @@ const ZoomControls = ({ onZoomChange }) => {
             </button>
 
             {/* Display Current Zoom Level */}
-            <div className="zoom-level" aria-label={`Zoom Level: ${(zoomLevel * 100).toFixed(0)}%`}>
-                {(zoomLevel * 10).toFixed(0)}
+            <div className="zoom-level" aria-label={`Zoom Level: ${(localZoom * 100).toFixed(0)}%`}>
+                {(localZoom * 10).toFixed(0)}
             </div>
 
             {/* Increase Zoom */}

@@ -487,7 +487,6 @@ font-style: italic;
 
 /* HW Text */
 .hw-text {
-  position: absolute;
   bottom: 3px;
   font-size: 32px;
   font-weight: bold;

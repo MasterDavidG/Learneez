@@ -22,8 +22,8 @@ const Welcome = () => {
             <img src={learneezHero} alt="Empowering Learning" className="hero-image" />
             <div className="hero-content">
                 <h2> <strong>Решавай</strong> Задачите си <strong>Самостоятелно</strong></h2>
-                <p> Решението за вас</p>
-                <a href="/register" className="cta-button">Започнете Обучението си</a>
+                <p> Кажете край на затруднението!</p>
+                <a href="/register" className="cta-button">Започнете</a>
             </div>
         </section>
 
@@ -69,7 +69,6 @@ const Welcome = () => {
                             Целите, които сме си поставили са насочени към това, учениците да са максимално мотивирани да положат усилия, за да се справят с домашните си сами, използвайки познатите им електронни устройства и модерни технологии.
                              </p>
                         </div>
-                        <img src={learneezChallenge} alt="Challenge Learneez" className="challenge-image" />
                     </div>
                 </section>
 

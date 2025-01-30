@@ -55,20 +55,30 @@ const DrawingCanvas = ({
 
     // Drawing handlers with pointer capture
     const handlePointerDown = (e) => {
-        if (e.evt.button !== undefined && e.evt.button !== 0) return; // Only allow left mouse button
+        const touchPoints = e.evt.touches ? e.evt.touches.length : 1;
+    
+        if (touchPoints === 2) {
+            // Two-finger touch detected: allow scrolling, disable drawing
+            isDrawing.current = false;
+            window.scrollBy({ top: 200, behavior: "smooth" }); // Scroll down
+            return;
+        }
+    
+        if (e.evt.button !== undefined && e.evt.button !== 0) return;
         if (e.target.className === "audio-button") return;
-
+    
         e.target.setPointerCapture(e.pointerId);
         isDrawing.current = true;
-
+    
         const pos = e.target.getStage().getPointerPosition();
         const lineWidth = tool === "eraser" ? penSize * 2 : penSize;
-
+    
         setLines((prevLines) => [
             ...prevLines,
             { tool, points: [pos.x, pos.y], width: lineWidth },
         ]);
     };
+    
 
     const handlePointerMove = (e) => {
         if (!isDrawing.current) return;

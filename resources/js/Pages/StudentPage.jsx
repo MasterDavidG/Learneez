@@ -5,7 +5,7 @@ import DrawingCanvas from "../Components/DrawingCanvas";
 import ZoomControls from "@/Components/ZoomControls"; // Import the ZoomControls
 import { FaPen, FaEraser } from "react-icons/fa";
 import "../../css/StudentPage.css";
-import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaHome, FaBook, FaSmile } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCheckCircle, FaHome} from "react-icons/fa";
 
 const StudentPage = ({ page }) => {
     const [tool, setTool] = useState("pen");
@@ -22,6 +22,10 @@ const StudentPage = ({ page }) => {
     const [isDone, setIsDone] = useState(false); // Tracks if assignment is done
     const [showMessage, setShowMessage] = useState(false);
 
+    useEffect(() => {
+        const screenWidth = window.innerWidth;
+        setZoomLevel(screenWidth < 768 ? 0.3 : 0.6); // ✅ Set correct zoom initially
+    }, []);
     // Handle zoom changes
     const handleZoomChange = (newZoom) => {
         setZoomLevel(newZoom);
@@ -34,9 +38,13 @@ const StudentPage = ({ page }) => {
 
             const img = new window.Image();
             img.src = constructedImageUrl;
-            img.onload = () =>
-                setCanvasSize({ width: img.width, height: img.height });
-        }
+            img.onload = () => {
+                let newWidth = img.width;
+                let newHeight = img.height;
+
+                setCanvasSize({ width: newWidth, height: newHeight });
+            };
+                }
 
         const fetchButtons = async () => {
             try {
@@ -153,7 +161,7 @@ const StudentPage = ({ page }) => {
             </div>
 
             {/* Zoom Controls */}
-            <ZoomControls onZoomChange={handleZoomChange} />
+            <ZoomControls zoomLevel={zoomLevel} onZoomChange={handleZoomChange} />
             <div className="top-controls">
                     <button
                         className="icon-button"
@@ -189,8 +197,8 @@ const StudentPage = ({ page }) => {
             <FaCheckCircle className="done-icon" />
         ) : (
             <>
-                <FaBook className="hw-icon" />
-                <span className="hw-text">H W</span>
+                <FaCheckCircle  className="hw-icon" />
+                <span className="hw-text">HW</span>
             </>
         )}
     </button>

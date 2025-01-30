@@ -36,7 +36,7 @@ export default function Login({ status, canResetPassword }) {
                         </Link>
                     </div>
                 {status && (
-                    <div className="mb-4 text-sm font-medium text-green-600">
+                    <div >
                         {status}
                     </div>
                 )}
@@ -84,7 +84,7 @@ export default function Login({ status, canResetPassword }) {
                                     setData('remember', e.target.checked)
                                 }
                             />
-                            <span className="ms-2 text-sm text-gray-600">
+                            <span className="">
                                 Запомни ме
                             </span>
                         </label>

@@ -413,12 +413,7 @@ const AdminPage = ({ auth, pages: initialPages }) => {
                                 </>
                             )}
 
-                            <button
-                                className="button save-page"
-                                onClick={savePage}
-                            >
-                                Запиши страницата
-                            </button>
+                       
                         </div>
                     </div>
                 )}
