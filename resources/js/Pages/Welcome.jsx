@@ -21,7 +21,7 @@ const Welcome = () => {
   <section className="hero-section">
             <img src={learneezHero} alt="Empowering Learning" className="hero-image" />
             <div className="hero-content">
-                <h2> <strong>Решавай</strong> Задачите си <strong>Самостоятелно</strong></h2>
+                <h2> <strong>Решавай</strong> задачите си <strong>самостоятелно</strong></h2>
                 <p> Кажете край на затруднението!</p>
                 <a href="/register" className="cta-button">Започнете</a>
             </div>
