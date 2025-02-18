@@ -43,8 +43,7 @@ export default function Login({ status, canResetPassword }) {
 
                 <form onSubmit={submit} className="login-form">
                     <div className="form-group">
-                        <InputLabel htmlFor="email" value="Email" />
-
+                       <h2>Имейл</h2>
                         <TextInput
                             id="email"
                             type="email"
@@ -60,7 +59,7 @@ export default function Login({ status, canResetPassword }) {
                     </div>
 
                     <div className="form-group">
-                        <InputLabel htmlFor="password" value="Парола" />
+                        <h2>Парола</h2>
 
                         <TextInput
                             id="password"
@@ -85,7 +84,7 @@ export default function Login({ status, canResetPassword }) {
                                 }
                             />
                             <span className="">
-                                Запомни ме
+                                 Запомни ме
                             </span>
                         </label>
                     </div>

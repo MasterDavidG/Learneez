@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { FaUserTie, FaTrash } from "react-icons/fa";
 import { Link } from "@inertiajs/react";
 import "../../css/StudentDashboard.css";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
@@ -8,10 +9,12 @@ const StudentDashboard = ({ auth }) => {
     const [textbooks, setTextbooks] = useState([]);
     const [userTextbooks, setUserTextbooks] = useState([]);
     const [homeworkPages, setHomeworkPages] = useState({});
+    const [teacherName, setTeacherName] = useState(null);
+    const [showRemoveTeacher, setShowRemoveTeacher] = useState(false);
 
     const [pages, setPages] = useState([]);
     const [selectedTextbook, setSelectedTextbook] = useState(null);
-    const [assignTextbookId, setAssignTextbookId] = useState(null); // For textbook assignment dropdown
+    const [assignTextbookId, setAssignTextbookId] = useState(null);
     const [homeworkPage, setHomeworkPage] = useState(null);
     const [profile, setProfile] = useState({
         name: "",
@@ -23,7 +26,19 @@ const StudentDashboard = ({ auth }) => {
         fetchTextbooks();
         fetchUserTextbooks();
         fetchProfile();
+        fetchTeacher();
     }, []);
+    const fetchTeacher = () => {
+        axios
+            .get("/student/teacher")
+            .then((response) => {
+                setTeacherName(response.data.teacher_name || null);
+            })
+            .catch((error) => {
+                console.error("Error fetching teacher:", error);
+                setTeacherName(null);
+            });
+    };
 
     const fetchTextbooks = () => {
         axios
@@ -56,7 +71,7 @@ const StudentDashboard = ({ auth }) => {
 
                 acc[page.id] = {
                     hasAssignment: hasAssignment,
-                    isCompleted: isDone, // ✅ Now correctly checking if it's done
+                    isCompleted: isDone,
                 };
 
                 return acc;
@@ -121,9 +136,10 @@ const StudentDashboard = ({ auth }) => {
         if (window.confirm("Are you sure you want to remove your teacher?")) {
             axios
                 .post("/api/student/remove-teacher")
-                .then(() => {
-                    alert("Teacher removed successfully!");
-                    fetchProfile();
+                .then((response) => {
+                    alert(response.data.message);
+                    setTeacherName(null);
+                    setShowRemoveTeacher(false);
                 })
                 .catch((error) =>
                     console.error("Error removing teacher:", error)
@@ -137,6 +153,44 @@ const StudentDashboard = ({ auth }) => {
                 <header className="dashboard-header">
                     <div className="header-content">
                         <h1>Здравей {profile.name || "Student"}!</h1>
+
+                        {/* Teacher Section - Inside Header Left */}
+                        <div className="teacher">
+                        <div
+                            className="teacher-section"
+                            onClick={() =>
+                                teacherName &&
+                                setShowRemoveTeacher(!showRemoveTeacher)
+                            }
+                        >
+                            
+                            <FaUserTie className="teacher-icon" />
+                            <span className="teacher-name">
+                                 { teacherName ? teacherName : "Няма учител"}
+                            </span>
+                            </div>
+                            {/* Dropdown Remove Teacher Button (Only visible if a teacher exists) */}
+                            {showRemoveTeacher && teacherName && (
+                                <div className="teacher-dropdown show">
+                                    <button
+                                        onClick={handleRemoveTeacher}
+                                        className="remove-teacher"
+                                    >
+                                        <FaTrash
+                                            style={{ marginRight: "5px" }}
+                                        />{" "}
+                                        Премахни Учител
+                                    </button>
+                                </div>
+                            )}
+
+                            {/* Informational Message when No Teacher */}
+                            {!teacherName && (
+                                <div className="teacher-info">
+                                    Учителят ви може да се регистрира в платформата и да ви помага в обучението. 
+                                </div>
+                            )}
+                        </div>
                         {/* Dropdown to assign a textbook */}
                         <div className="assign-textbook-container">
                             <select
@@ -163,12 +217,6 @@ const StudentDashboard = ({ auth }) => {
                                 Запази учебник
                             </button>
                         </div>
-                        <button
-                            onClick={handleRemoveTeacher}
-                            className="button remove-teacher"
-                        >
-                            Премахни Учител
-                        </button>
                     </div>
                 </header>
 
@@ -193,7 +241,7 @@ const StudentDashboard = ({ auth }) => {
                         ))}
                     </div>
                 </section>
-                
+
                 {/* Pages Grid */}
                 {selectedTextbook && (
                     <section ref={pagesSectionRef} className="pages-grid">

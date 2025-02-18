@@ -10,7 +10,7 @@ body {
 /* Dashboard Container */
 .student-dashboard {
     padding: 30px 20px;
-    max-width: 1200px;
+    max-width: 1400px;
     margin: auto;
 }
 
@@ -111,7 +111,7 @@ body {
     text-align: center;
     padding: 20px;
     border-radius: 15px;
-    font-size: 1.2rem;
+    font-size: 1.6rem;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -248,4 +248,102 @@ h2{
     font-size: 2em;
     font-weight: bold;
     font-style: oblique;
+}
+
+/* ✅ Teacher Section - Positioned at Top-Left Inside Header */
+.teacher-section {
+    display:flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #ffcc00, #ffffff); /* Yellow to White Gradient */
+    padding: 10px 15px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    width:max-content;
+    margin-right: 10px; /* Space before dropdown */
+}
+.teacher{
+    display:flex;
+}
+
+/* Hover Effect */
+.teacher-section:hover {
+    transform: scale(1.05);
+}
+
+/* Teacher Icon */
+.teacher-icon {
+    display: flex;
+    color: #3998ff; /* Blue Icon */
+    font-size: 58px;
+    background-color: #222;
+    border-radius: 30px;
+    padding: 5px;
+}
+
+/* Teacher Name */
+.teacher-name {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #222; /* Dark text for contrast */
+}
+
+/* ✅ Dropdown for Remove Button (Directly Below Teacher Section) */
+.teacher-dropdown {
+    background: white;
+    border: 2px solid #ffcc00;
+    padding: 8px 12px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    display: none; /* Hidden by default */
+    transition: all 0.3s ease-in-out;
+    width:max-content;
+}
+
+/* Show dropdown when active */
+.teacher-dropdown.show {
+    display: block;
+    margin-top: 5px; /* Creates normal spacing below teacher section */
+}
+
+/* ✅ Remove Button */
+.remove-teacher {
+display: flex;
+    background: #ffcc00;
+    color: #222;
+    border: none;
+    padding: 9px 12px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Hover Effect */
+.remove-teacher:hover {
+    background: #e6b800;
+    color: white;
+}
+.teacher-info {
+    display: flex;
+    color: #9cdcff;
+    font-size: 1.6rem;
+    font-style: italic;
+    text-align: center;
+    padding: 8px;
+    border-radius: 5px;
+}
+
+/* ✅ Responsive - Adjust for Small Screens */
+@media (max-width: 768px) {
+    .teacher-section {
+        width: 100%; /* Allow flexible size */
+    }
+
+    .teacher-dropdown {
+        width: 100%;
+    }
 }

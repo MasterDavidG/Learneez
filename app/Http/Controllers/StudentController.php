@@ -182,6 +182,36 @@ class StudentController extends Controller
                 ->withErrors(['error' => 'Failed to load the page.']);
         }
     }
+
+    public function getTeacherName()
+{
+    try {
+        $student = Auth::user();
+
+        if ($student->role !== 'student') {
+            return response()->json(['error' => 'Unauthorized action'], 403);
+        }
+
+        // Check if student has a teacher assigned
+        if (!$student->teacher_id) {
+            return response()->json(['message' => 'Your teacher can work with you by adopting you'], 200);
+        }
+
+        // Retrieve the teacher's name
+        $teacher = User::find($student->teacher_id);
+
+        // If teacher exists, return name; otherwise, handle missing teacher case
+        if ($teacher) {
+            return response()->json(['teacher_name' => $teacher->name]);
+        } else {
+            return response()->json(['message' => 'Assigned teacher not found'], 404);
+        }
+    } catch (\Exception $e) {
+        Log::error("Error fetching teacher name: {$e->getMessage()}");
+        return response()->json(['error' => 'Failed to fetch teacher name'], 500);
+    }
+}
+
        /**
      * Remove Assigned Teacher
      */

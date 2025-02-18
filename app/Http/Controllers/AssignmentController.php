@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Assignment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
 
 class AssignmentController extends Controller
 {
@@ -26,14 +28,32 @@ class AssignmentController extends Controller
         
         return response()->json($assignment);
     }
+
     public function checkAssignmentStatus($pageId)
 {
-    $assignment = Assignment::where('page_id', $pageId)->first();
+    try {
+        $user = Auth::user();
 
-    return response()->json([
-        'hasAssignment' => $assignment ? true : false,
-        'isDone' => $assignment && $assignment->task_status === 'completed' ? true : false
-    ]);
+        // Ensure the user is authenticated
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Fetch the assignment for the logged-in user and the given page ID
+        $assignment = Assignment::where('user_id', $user->id)
+            ->where('page_id', $pageId)
+            ->first();
+
+        return response()->json([
+            'hasAssignment' => $assignment ? true : false,
+            'isDone' => $assignment && $assignment->task_status === 'completed' ? true : false
+        ]);
+    } catch (\Exception $e) {
+
+        return response()->json([
+            'error' => 'Internal Server Error'
+        ], 500);
+    }
 }
 
 }
