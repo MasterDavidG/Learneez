@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "../../css/Welcome.css";
 import learneezHero from "./language-development-4-5-years_narrow.jpg";
-import learneezFeature from "./learneez1.jpg";
 import learneezChallenge from "./Blog-Covers-1.png";
 import Footer from "../Components/Footer";
 import {
@@ -107,13 +106,22 @@ const Welcome = () => {
                 <section className="problem">
                     <div className="problem-content">
                         <div className="text">
-                            <h2>Нашата цел</h2>
+                             <header>Нашата цел</header>
                             <p>
-                                Целите, които сме си поставили са насочени към
-                                това, учениците да са максимално мотивирани да
-                                положат усилия, за да се справят с домашните си
-                                сами, използвайки познатите им електронни
+                                Целта ни е да помогнем на учениците да са максимално мотивирани
+                                да положат усилия, за да се справят с домашните
+                                си сами, използвайки познатите им електронни
                                 устройства и модерни технологии.
+                                <br></br>
+                                Ако желаете да дарите сума по ваше желание за
+                                развитието на този сайт можете да го направите на: <br></br>
+                                <strong>
+                                    IBAN: BG16FINV91501217439369
+                                </strong>{" "} (BGN) 
+                                <br></br>
+                                BIC: FINVBGSF
+Титуляр: УЧИ ЛЕСНО СДРУЖЕНИЕ
+<br></br>Всяка подкрепа е важна за нас.
                             </p>
                         </div>
                     </div>

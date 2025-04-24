@@ -1,6 +1,5 @@
 import React from "react";
 import "../../css/Welcome.css"; // Ensure the path is correct
-import learneez1 from "./learneez1.jpg"; // Adjust the path based on your folder structure
 import Footer from "../Components/Footer";
 import FrontPageLayout from "@/Layouts/FrontPageLayout";
 const About = () => {

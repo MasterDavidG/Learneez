@@ -272,13 +272,13 @@ const AdminPage = ({ auth, pages: initialPages }) => {
                 </header>
 
                 <div className="upload-section">
-                    <h2>Създай Учебник от PDF</h2>
+                    <h1>Създай Учебник от PDF</h1>
                     <form
                         onSubmit={handleTextbookUploadAndProcess}
                         className="upload-form"
                     >
                         <div>
-                            <label>Заглавие</label>
+                            <h2>Заглавие</h2>
                             <input
                                 type="text"
                                 name="title"
@@ -288,7 +288,7 @@ const AdminPage = ({ auth, pages: initialPages }) => {
                             />
                         </div>
                         <div>
-                            <label>PDF файл:</label>
+                            <h2>PDF файл:</h2>
                             <input
                                 type="file"
                                 name="pdf"

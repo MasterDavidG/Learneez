@@ -49,6 +49,33 @@ class TextbookController extends Controller
             return response()->json(['error' => 'Failed to fetch user textbooks.'], 500);
         }
     }
+
+    public function StudentTextbooks($studentId)
+{
+    try {
+        // Ensure the student exists
+        $student = User::where('id', $studentId)->where('role', 'student')->first();
+        if (!$student) {
+            return response()->json(['error' => 'Student not found.'], 404);
+        }
+
+        // Retrieve only textbooks assigned to the student from user_textbooks table
+        $textbooks = Textbook::whereIn('id', function ($query) use ($studentId) {
+            $query->select('textbook_id')
+                ->from('user_textbooks')  // Ensure the correct table name
+                ->where('user_id', $studentId);
+        })->select('id', 'title')->get();
+
+        return response()->json($textbooks, 200);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => 'Failed to fetch student textbooks.',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+}
+
+    
     /**
      * Fetch pages for a specific textbook.
      *

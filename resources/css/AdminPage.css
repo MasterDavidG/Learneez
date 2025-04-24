@@ -1,6 +1,5 @@
 /* General Container */
 .admin-page-container {
-    font-family: 'Arial', sans-serif;
     background-color: #f9faff;
     padding: 20px;
     min-height: 100vh;
@@ -24,7 +23,7 @@
 }
 
 .admin-header h1 {
-    font-size: 24px;
+    font-size: 34px;
     margin: 0;
 }
 /* Upload Section */
@@ -46,9 +45,9 @@
 }
 
 /* Section Header */
-.upload-section h2 {
-    font-size: 24px;
-    color: #42a7ff;
+.upload-section h1 {
+    font-size: 34px;
+    color: #4783b8;
     margin-bottom: 20px;
     font-weight: 700;
     text-transform: uppercase;
@@ -62,7 +61,7 @@
 .file-input {
     width: 100%;
     padding: 15px;
-    font-size: 22px;
+    font-size: 32px;
     font-weight: 500;
     color: #333333;
     background: #f7f9fc;

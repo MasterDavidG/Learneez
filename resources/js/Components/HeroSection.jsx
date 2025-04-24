@@ -1,5 +1,4 @@
 import React from 'react';
-import learneezHero from '@Pages/learneez1.jpg';
 
 const HeroSection = () => {
     return (
